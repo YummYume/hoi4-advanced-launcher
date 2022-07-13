@@ -1,52 +1,29 @@
 <script lang="ts">
-    import Button, { Label } from '@smui/button';
-    import Chip, { Set, Text } from '@smui/chips';
-    import Textfield from '@smui/textfield';
+    import Tab, { Label } from '@smui/tab';
+    import TabBar from '@smui/tab-bar';
 
-    const hoi4Path = 'D:/Windows/Programmes/steamapps/common/Hearts of Iron IV/hoi4.exe';
-    const choices = ['-debug', '-checksum'];
+    import Home from './lib/pages/Home.svelte';
+    import Settings from './lib/pages/Settings.svelte';
+    import Conflicts from './lib/pages/Conflicts.svelte';
+    import Mods from './lib/pages/Mods.svelte';
 
-    let parameters = '';
-    let selected = [];
+    const tabs = [
+        { label: 'Home', component: Home },
+        { label: 'Mods', component: Mods },
+        { label: 'Conflicts', component: Conflicts },
+        { label: 'Settings', component: Settings }
+    ];
 
-    function launchHoi4() {
-        try {
-            api.launchHoi4(hoi4Path, parameters.split(' '));
-        } catch (e) {
-            console.error(e);
-            // TODO handle error
-        }
-    }
-
-    function handleInputChange(e: any) {
-        const inputParameters = e.target.value.trim().split(' ');
-
-        selected = choices.filter((choice) => inputParameters.includes(choice));
-    }
-
-    function handleChipSelection(e: any) {
-        const chipDetails = e.detail;
-        const inputParameters = parameters.trim().split(' ');
-
-        if (chipDetails.selected && !inputParameters.includes(chipDetails.chipId)) {
-            parameters = `${parameters} ${chipDetails.chipId}`.trim();
-        } else if (!chipDetails.selected && inputParameters.includes(chipDetails.chipId)) {
-            parameters = parameters.replace(chipDetails.chipId, '').trim();
-        }
-    }
+    let activeTab = tabs[0];
 </script>
 
+<header>
+    <TabBar {tabs} let:tab bind:active={activeTab}>
+        <Tab {tab}>
+            <Label>{tab.label}</Label>
+        </Tab>
+    </TabBar>
+</header>
 <main>
-    <Textfield
-        label="Parameters"
-        bind:value={parameters}
-        on:input={handleInputChange}
-        type="text"
-    />
-    <Set chips={choices} let:chip filter bind:selected on:SMUIChip:selection={handleChipSelection}>
-        <Chip {chip} touch>
-            <Text>{chip}</Text>
-        </Chip>
-    </Set>
-    <Button variant="outlined" on:click={launchHoi4}><Label>Launch HOI4</Label></Button>
+    <svelte:component this={activeTab.component} />
 </main>

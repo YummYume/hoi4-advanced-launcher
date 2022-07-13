@@ -1,3 +1,3 @@
 declare const api: {
-    launchHoi4: function(string, string[]): void,
+    launchHoi4: (executablePath: string, parameters?: string[]) => void;
 };

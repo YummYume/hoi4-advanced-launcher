@@ -1,4 +1,3 @@
-// @ts-nocheck
 const sveltePreprocess = require('svelte-preprocess');
 
 module.exports = {
