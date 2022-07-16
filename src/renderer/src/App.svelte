@@ -1,18 +1,9 @@
 <script lang="ts">
+    import Notifications from 'svelte-notifications';
     import Tab, { Label } from '@smui/tab';
     import TabBar from '@smui/tab-bar';
 
-    import Home from './lib/pages/Home.svelte';
-    import Settings from './lib/pages/Settings.svelte';
-    import Conflicts from './lib/pages/Conflicts.svelte';
-    import Mods from './lib/pages/Mods.svelte';
-
-    const tabs = [
-        { label: 'Home', component: Home },
-        { label: 'Mods', component: Mods },
-        { label: 'Conflicts', component: Conflicts },
-        { label: 'Settings', component: Settings }
-    ];
+    import { tabs } from './lib/data/tabs';
 
     let activeTab = tabs[0];
 </script>
@@ -25,5 +16,14 @@
     </TabBar>
 </header>
 <main>
-    <svelte:component this={activeTab.component} />
+    <Notifications>
+        <svelte:component this={activeTab.component} />
+    </Notifications>
 </main>
+
+<style>
+    main {
+        display: flex;
+        height: 100%;
+    }
+</style>

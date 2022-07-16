@@ -23,14 +23,17 @@ export const parameters: Parameter[] = [
     },
     {
         key: '-autosave',
-        matches: (value) =>
-            /^-autosave=\b(NEVER|DAILY|WEEKLY|MONTHLY|HALFYEAR|YEARLY)\b$/.test(value),
+        matches: (value) => /^-autosave=\b(NEVER|DAILY|WEEKLY|MONTHLY|HALFYEAR|YEARLY)\b$/.test(value),
         description: "Overrides the autosave interval in the user's settings.txt file.",
         argument: {
             allowAny: false,
             choices: ['NEVER', 'DAILY', 'WEEKLY', 'MONTHLY', 'HALFYEAR', 'YEARLY'],
             matches: (value) => /^\b(NEVER|DAILY|WEEKLY|MONTHLY|HALFYEAR|YEARLY)\b$/.test(value)
         }
+    },
+    {
+        key: '-debug',
+        matches: (value) => /^-debug\b$/.test(value)
     }
 ];
 
