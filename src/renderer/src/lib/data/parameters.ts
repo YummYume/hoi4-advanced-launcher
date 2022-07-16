@@ -32,7 +32,31 @@ export const parameters: Parameter[] = [
         }
     },
     {
+        key: '-autosave_count',
+        matches: (value) => /^-autosave_count=\b[0-9]*\b$/.test(value),
+        description:
+            "Overrides the debug_saves count in the user's settings.txt file. Specifies how many autosave files are kept before the oldest one is deleted when creating a new one.",
+        argument: {
+            allowAny: true,
+            matches: (value) => /^\b[0-9]*\b$/.test(value)
+        }
+    },
+    {
+        key: '-checksum',
+        description:
+            "Computes and writes out the overall checksum and the checksum of each individual game data file to logs/system.log. Useful when trying to identify if there is a modification to a single file, or some other file that exists but shouldn't, throwing off the checksum and blocking multiplayer.",
+        matches: (value) => /^-checksum\b$/.test(value)
+    },
+    {
+        key: '-crash_data_log',
+        description:
+            'Collects data on errors based on crashes that occur with critical bugs and malfunctions. Including if a buggy mod is activated from the launcher.',
+        matches: (value) => /^-crash_data_log\b$/.test(value)
+    },
+    {
         key: '-debug',
+        description:
+            'Indicates that the game is running in debug mode, enabling a variety of extra behavior to help with development or testing. Can be turned on from the game console using the debug command.',
         matches: (value) => /^-debug\b$/.test(value)
     }
 ];

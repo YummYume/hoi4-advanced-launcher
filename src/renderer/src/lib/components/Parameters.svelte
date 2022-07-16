@@ -104,7 +104,7 @@
         <Chip {chip} touch shouldFocusPrimaryActionOnClick={false} shouldRemoveOnTrailingIconClick={false}>
             <ChipText>{chip.key}</ChipText>
         </Chip>
-        <Tooltip>
+        <Tooltip showDelay={1000} hideDelay={100}>
             <TooltipContent>{chip.description ?? 'No description provided.'}</TooltipContent>
         </Tooltip>
     </Wrapper>
