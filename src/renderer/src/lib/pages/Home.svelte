@@ -7,8 +7,7 @@
     import { launchParameters } from '../stores/launchParameters';
     import Parameters from '../components/Parameters.svelte';
 
-    // TODO get real path
-    const hoi4Path = 'D:/Windows/Programmes/steamapps/common/Hearts of Iron IV/hoi4.exe';
+    const hoi4Path = api.getHoi4ExecutablePath();
     const { addNotification } = getNotificationsContext();
 
     let strictMode = true;
@@ -34,7 +33,11 @@
 
 <div class="container">
     <div class="top-row">
-        <Button variant="outlined" on:click={launchHoi4} disabled={Boolean(strictMode && parameterErrorMessage)}>
+        <Button
+            variant="outlined"
+            on:click={launchHoi4}
+            disabled={Boolean((strictMode && parameterErrorMessage) || !hoi4Path)}
+        >
             <ButtonLabel>Launch HOI4</ButtonLabel>
         </Button>
     </div>

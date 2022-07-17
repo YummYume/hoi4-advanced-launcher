@@ -2,24 +2,29 @@
     import Notifications from 'svelte-notifications';
     import Tab, { Label } from '@smui/tab';
     import TabBar from '@smui/tab-bar';
+    import { isLoading, _ } from 'svelte-i18n';
 
     import { tabs } from './lib/data/tabs';
 
     let activeTab = tabs[0];
 </script>
 
-<header>
-    <TabBar {tabs} let:tab bind:active={activeTab}>
-        <Tab {tab}>
-            <Label>{tab.label}</Label>
-        </Tab>
-    </TabBar>
-</header>
-<main>
-    <Notifications>
-        <svelte:component this={activeTab.component} />
-    </Notifications>
-</main>
+{#if $isLoading}
+    <span>Loading...</span>
+{:else}
+    <header>
+        <TabBar {tabs} let:tab bind:active={activeTab}>
+            <Tab {tab}>
+                <Label>{$_(tab.key)}</Label>
+            </Tab>
+        </TabBar>
+    </header>
+    <main>
+        <Notifications>
+            <svelte:component this={activeTab.component} />
+        </Notifications>
+    </main>
+{/if}
 
 <style>
     main {

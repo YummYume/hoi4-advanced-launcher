@@ -1,7 +1,8 @@
 {
   "name": "hoi4-advanced-launcher",
+  "productName": "HOI4 Advanced Launcher",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1 BETA",
   "main": "src/index.js",
   "scripts": {
     "start": "concurrently \"yarn dev\" \"yarn electron\"",
@@ -10,7 +11,8 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "electron": "electron src/index.js",
-    "dist": "vite build && electron-builder"
+    "dist": "vite build && electron-builder",
+    "translations": "node src/translation_parser/translationParser.js"
   },
   "devDependencies": {
     "@smui-extra/accordion": "^6.0.0-beta.16",
@@ -30,9 +32,12 @@
     "concurrently": "^7.2.2",
     "electron": "^19.0.8",
     "electron-builder": "^23.1.0",
+    "js-yaml": "^4.1.0",
+    "steam-game-path": "^2.2.0",
     "svelte": "^3.44.0",
     "svelte-check": "^2.2.7",
     "svelte-dialogs": "^1.2.2",
+    "svelte-i18n": "^3.4.0",
     "svelte-notifications": "^0.9.95",
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",

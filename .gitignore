@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Parsed translations
+src/renderer/src/translations/*.json
