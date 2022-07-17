@@ -31,15 +31,15 @@ An advanced launcher for HOI4.
 - `yarn translations` : parses the `.yaml` translations in the `src/translation_parser/translations` folder to `.json` translations in the `src/renderer/src/translations` folder
 
 # Good to know
-- 100% open source and free to use. Anyone can contribute.
+- 100% open source and free to use. Anyone can contribute by making a pull request.
 - This project uses [Electron](https://www.electronjs.org) to manage the app and [❤️Svelte❤️](https://svelte.dev) + [Vite](https://vitejs.dev) + [Typescript](https://www.typescriptlang.org) to manage the client side.
 - The formater used for js is [prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) (using the `.prettierrc` config file).
 - Typescript is enabled everywhere except in `.js` files (only `.ts`).
 - Translations are written in `.yaml` (for a better dev experience) and then parsed into `.json` files used by the [i18n Svelte module](https://github.com/kaisermann/svelte-i18n) using the `yarn translations` command.
 - As suggested by the [i18n Svelte module](https://github.com/kaisermann/svelte-i18n), installing [i18n-ally](https://github.com/lokalise/i18n-ally) for your IDE is highly recommended.
 - Once built, the project is nothing more than html, css and js, all bundled and managed by [Electron](https://www.electronjs.org), which is why all dependencies can be installed as dev only.
-- The UI library used is [Svelte Material UI](https://sveltematerialui.com). Css is written directly in modules most of the most, except for a few global configs in the `global.css` file. Try not to use SASS for this project if possible (would be overkill).
-- When you want to add a new [Svelte Material UI](https://sveltematerialui.com) component, only install that component in particular (and not the whole library).
+- The UI library used is [Svelte Material UI](https://sveltematerialui.com). Css is written directly in modules most of the time, except for a few global configs in the `global.css` file. Try not to use SASS for this project if possible (would be overkill).
+- When you want to add a new [Svelte Material UI](https://sveltematerialui.com) component, make sure to only install the said component (and not the whole library).
 - Notifications are managed by [Svelte Notifications](https://github.com/keenethics/svelte-notifications) and dialogs by [Svelte Dialogs](https://github.com/bibizio/svelte-dialogs). Do not use Material UI for those.
 - When adding a new dependency, always add it as a dev dependency and ensure the library is actively **maintained** and is **needed** (we do not want to use unnecessary libraries). Other than that, every additional library is welcomed.
 - This project is not using Docker on purpose. It generally offers a poor developer experience with Electron and is not required because of the so few requirements.
