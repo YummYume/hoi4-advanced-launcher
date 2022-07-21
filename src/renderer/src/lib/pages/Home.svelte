@@ -3,6 +3,8 @@
     import Accordion, { Panel, Header, Content as AccordionContent } from '@smui-extra/accordion';
     import IconButton, { Icon } from '@smui/icon-button';
     import { getNotificationsContext } from 'svelte-notifications';
+    import { fade } from 'svelte/transition';
+    import { _ } from 'svelte-i18n';
 
     import { launchParameters } from '../stores/launchParameters';
     import Parameters from '../components/Parameters.svelte';
@@ -21,7 +23,7 @@
             console.error(e);
             addNotification({
                 id: 'launch-error',
-                text: 'Something went wrong while launching the game.',
+                text: $_('notification.launch_error.text'),
                 position: 'top-center',
                 removeAfter: 5000,
                 type: 'danger'
@@ -31,22 +33,22 @@
     }
 </script>
 
-<div class="container">
+<section in:fade class="container">
     <div class="top-row">
         <Button
             variant="outlined"
             on:click={launchHoi4}
             disabled={Boolean((strictMode && parameterErrorMessage) || !hoi4Path)}
         >
-            <ButtonLabel>Launch HOI4</ButtonLabel>
+            <ButtonLabel>{$_('home.launch_hoi4')}</ButtonLabel>
         </Button>
     </div>
     <div class="bottom-row">
         <Accordion style="width: 80%;">
             <Panel square variant="outlined" color="primary" extend bind:open={parametersPanelOpened}>
                 <Header>
-                    Launch Parameters
-                    <span slot="description">Change the launch parameters here.</span>
+                    {$_('home.launch_parameters')}
+                    <span slot="description">{$_('home.launch_parameters.description')}</span>
                     <IconButton slot="icon" toggle pressed={parametersPanelOpened}>
                         <Icon class="material-icons" on>unfold_less</Icon>
                         <Icon class="material-icons">unfold_more</Icon>
@@ -58,7 +60,7 @@
             </Panel>
         </Accordion>
     </div>
-</div>
+</section>
 
 <style>
     .container {

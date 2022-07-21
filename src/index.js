@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, screen, dialog } = require('electron');
 const path = require('path');
 
 const isDev = !app.isPackaged;
@@ -27,10 +27,37 @@ const createWindow = () => {
     } else {
         mainWindow.loadFile(path.join(__dirname, 'renderer/dist/index.html'));
     }
+
+    return mainWindow;
+};
+
+const createMenu = () => {
+    Menu.setApplicationMenu(Menu.buildFromTemplate([]));
 };
 
 app.whenReady().then(() => {
-    createWindow();
+    const mainWindow = createWindow();
+
+    createMenu();
+
+    ipcMain.handleOnce('getAppLocale', () => app.getLocale());
+    ipcMain.handleOnce('closeApp', () => app.quit());
+    ipcMain.handle('getAllDisplays', () => screen.getAllDisplays());
+    ipcMain.handle('openDirectoryDialog', async () => {
+        const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
+            properties: ['openDirectory']
+        });
+
+        if (canceled) {
+            return;
+        } else {
+            return filePaths[0];
+        }
+    });
+
+    ipcMain.on('close-app', () => {
+        app.quit();
+    });
 
     app.on('activate', function () {
         if (0 === BrowserWindow.getAllWindows().length) {

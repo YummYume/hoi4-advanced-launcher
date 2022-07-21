@@ -28,7 +28,7 @@ An advanced launcher for HOI4.
 - `yarn electron` : starts the electron app
 - `yarn build` : builds the app
 - `yarn dist` : builds the app with `yarn build` and then the electron app using the `renderer` folder
-- `yarn translations` : parses the `.yaml` translations in the `src/translation_parser/translations` folder to `.json` translations in the `src/renderer/src/translations` folder
+- `yarn translations` : parses the `.yaml` translations in the `src/translation_parser/translations` folder to `.json` translations in the `src/renderer/src/translations` folder, can also be used with arguments to only parse certain files (example : `yarn translations en fr` will only parse `en.yaml` and `fr.yaml` if they exist)
 
 # Good to know
 - 100% open source and free to use. Anyone can contribute by making a pull request.

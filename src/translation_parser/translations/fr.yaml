@@ -1,0 +1,35 @@
+### Menu
+menu.home: Launcher
+menu.mods: Mods
+menu.conflicts: Conflits
+menu.settings: Paramètres
+
+### Home
+home.launch_hoi4: Lancer HOI4
+home.launch_parameters: Paramètres de lancement
+home.launch_parameters.description: Changez les paramètres de lancement ici.
+
+### Settings
+# Launcher settings
+settings.launcher: Paramètres du launcher
+settings.language: Langue
+# Game settings
+settings.game_settings: Paramètres de jeu
+settings.game_settings.save: Sauvegarder les paramètres de jeu
+settings.display_mode: Mode d'affichage
+settings.display_mode.description: Le mode d'affichage du jeu.
+settings.display_mode.fullscreen: Plein écran
+settings.display_mode.borderless_fullscreen: Plein écran sans bordure
+settings.display_mode.windowed: Fenêtré
+settings.monitor: Moniteur
+settings.monitor.description: Le moniteur utilisé pour le jeu.
+settings.vsync.description: Activer VSync
+settings.refresh_rate: Fréquence de rafraîchissement
+settings.refresh_rate.description: La fréquence de rafraîchissement du moniteur actuel.
+settings.game_language: Langue du jeu
+settings.game_language.description: La langue utilisée dans le jeu.
+settings.renderer: Moteur de rendu
+settings.renderer.description: Le moteur de rendu du jeu. N'a aucun effet sur Linux.
+
+### Notifications
+notification.launch_error.text: Une erreur est survenue lors du lancement du jeu.

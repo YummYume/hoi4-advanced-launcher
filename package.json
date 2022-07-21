@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@smui-extra/accordion": "^6.0.0-beta.16",
+    "@smui-extra/autocomplete": "^6.0.0-beta.16",
     "@smui/button": "^6.0.0-beta.16",
     "@smui/chips": "^6.0.0-beta.16",
     "@smui/form-field": "^6.0.0-beta.16",

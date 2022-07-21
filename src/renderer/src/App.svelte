@@ -11,24 +11,24 @@
 
 {#if $isLoading}
     <span>Loading...</span>
-{:else}
-    <header>
-        <TabBar {tabs} let:tab bind:active={activeTab}>
-            <Tab {tab}>
-                <Label>{$_(tab.key)}</Label>
-            </Tab>
-        </TabBar>
-    </header>
-    <main>
-        <Notifications>
-            <svelte:component this={activeTab.component} />
-        </Notifications>
-    </main>
 {/if}
+<header>
+    <TabBar {tabs} let:tab bind:active={activeTab}>
+        <Tab {tab}>
+            <Label>{$_(`menu.${tab.key}`)}</Label>
+        </Tab>
+    </TabBar>
+</header>
+<main>
+    <Notifications>
+        <svelte:component this={activeTab.component} />
+    </Notifications>
+</main>
 
 <style>
     main {
         display: flex;
         height: 100%;
+        overflow: auto;
     }
 </style>
