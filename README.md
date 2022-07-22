@@ -5,14 +5,15 @@ An advanced launcher for HOI4.
 ## Done
 - Multi language support
 - Support all OS (thanks to Electron)
+- Working launcher with game parameters
+- Logs
 
 ## In progress
-- Working launcher with game parameters
+- Launcher & game settings
 
 ## Todo
 - Mod management
 - Mod conflicts detection
-- Global settings
 
 # Requirements
 - [Nodejs](https://nodejs.org/en/) >= 16.0 (16.14.0 recommended)
@@ -27,8 +28,9 @@ An advanced launcher for HOI4.
 - `yarn dev` : starts the vite server
 - `yarn electron` : starts the electron app
 - `yarn build` : builds the app
-- `yarn dist` : builds the app with `yarn build` and then the electron app using the `renderer` folder
+- `yarn dist` : runs `yarn translations`, then builds the app with `yarn build` and then builds the electron app using the `renderer` folder
 - `yarn translations` : parses the `.yaml` translations in the `src/translation_parser/translations` folder to `.json` translations in the `src/renderer/src/translations` folder, can also be used with arguments to only parse certain files (example : `yarn translations en fr` will only parse `en.yaml` and `fr.yaml` if they exist)
+- `yarn check` : check files using the `.tsconfig.json` file
 
 # Good to know
 - 100% open source and free to use. Anyone can contribute by making a pull request.

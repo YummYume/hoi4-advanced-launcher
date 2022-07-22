@@ -20,15 +20,15 @@
         try {
             api.launchHoi4(hoi4Path, $launchParameters.split(' '));
         } catch (e) {
-            console.error(e);
+            api.logs().error(e);
+
             addNotification({
                 id: 'launch-error',
-                text: $_('notification.launch_error.text'),
+                text: $_('notification.launch_error'),
                 position: 'top-center',
                 removeAfter: 5000,
                 type: 'danger'
             });
-            // TODO log error to system
         }
     }
 </script>

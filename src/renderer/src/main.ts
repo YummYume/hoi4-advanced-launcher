@@ -5,10 +5,8 @@ import { supportedLanguages } from './lib/data/languages';
 
 try {
     await api.init();
-    console.log('API initialized');
 } catch (e) {
-    console.error(e);
-    // TODO inform user of error & log
+    api.logs().error(e);
 }
 
 const appLocale = api.getAppLocale();

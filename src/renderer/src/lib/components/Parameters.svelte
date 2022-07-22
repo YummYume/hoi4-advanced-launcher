@@ -7,6 +7,7 @@
     import HelperText from '@smui/textfield/helper-text';
     import { dialogs } from 'svelte-dialogs';
     import { getNotificationsContext } from 'svelte-notifications';
+    import { _ } from 'svelte-i18n';
 
     import { Parameter, parameters } from '../data/parameters';
     import ParameterArgumentDialog from './ParameterArgumentDialog.svelte';
@@ -15,10 +16,10 @@
     export let parameterErrorMessage = null;
     export let launchParameters = '';
 
-    const { addNotification } = getNotificationsContext();
+    const { addNotification, removeNotification } = getNotificationsContext();
 
-    $: launchParameters = launchParameters.trim();
-    $: inputParameters = launchParameters.split(' ');
+    $: launchParameters = strictMode ? launchParameters.replace(/ +(?= )/g, '') : launchParameters;
+    $: inputParameters = launchParameters.trim().split(' ');
     $: selected = parameters.filter((value) => inputParameters.some((v) => value.matches(v)));
     $: {
         parameterErrorMessage = null;
@@ -26,7 +27,7 @@
         if (Boolean('' !== launchParameters && inputParameters)) {
             inputParameters.every((input) => {
                 if (!parameters.some((parameter) => parameter.matches(input))) {
-                    parameterErrorMessage = `Invalid parameter : ${input}`;
+                    parameterErrorMessage = $_('parameters.invalid', { values: { input } });
 
                     return false;
                 }
@@ -53,15 +54,16 @@
                 try {
                     argument = await dialogs.modal(ParameterArgumentDialog, { strictMode, parameter });
                 } catch (e) {
-                    console.error(e);
+                    api.logs().error(e);
+
+                    removeNotification('launch-error');
                     addNotification({
                         id: 'launch-error',
-                        text: 'Oops... Something went wrong.',
+                        text: $_('common.something_went_wrong'),
                         position: 'top-center',
                         removeAfter: 5000,
                         type: 'danger'
                     });
-                    // TODO log error to system
                 } finally {
                     if (argument && 0 < currentParameters.length) {
                         const lastElement = currentParameters[currentParameters.length - 1];
@@ -82,12 +84,13 @@
 </script>
 
 <Textfield
-    label="Parameters"
+    label={$_('parameters')}
     bind:value={launchParameters}
     type="text"
     style="width: 100%;"
     helperLine$style="width: 100%;"
     invalid={Boolean(strictMode && parameterErrorMessage)}
+    textarea
 >
     <HelperText slot="helper" style="color: #b00020;">
         {#if strictMode}
@@ -97,7 +100,7 @@
 </Textfield>
 <FormField>
     <Switch bind:checked={strictMode} />
-    <span slot="label">Enable strict mode</span>
+    <span slot="label">{$_('parameters.enable_strict_mode')}</span>
 </FormField>
 <Set chips={parameters} let:chip key={(chip) => chip.key} {selected} filter on:SMUIChip:selection={handleChipSelection}>
     <Wrapper rich>
@@ -105,7 +108,9 @@
             <ChipText>{chip.key}</ChipText>
         </Chip>
         <Tooltip showDelay={1000} hideDelay={100}>
-            <TooltipContent>{chip.description ?? 'No description provided.'}</TooltipContent>
+            <TooltipContent>
+                {chip.description ? $_(`parameter.description.${chip.description}`) : $_('parameter.no_description')}
+            </TooltipContent>
         </Tooltip>
     </Wrapper>
 </Set>

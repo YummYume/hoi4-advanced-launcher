@@ -6,7 +6,13 @@ declare const api: {
     getAppLocale: () => string;
     getTranslationFiles: () => string[];
     getAllDisplayScreens: () => import('electron').Display[];
+    updateScreensList: () => Promise<import('electron').Display[]>;
     folderPathInput: () => Promise<string>;
     isValidHoi4Folder: (path: string) => boolean;
+    isValidHoi4Folder: (path: string) => boolean;
     closeApp: () => void;
+    getAppDataPath: () => string;
+    getAppName: () => string;
+    isDev: () => boolean;
+    logs: () => import('electron-log').LogFunctions;
 };

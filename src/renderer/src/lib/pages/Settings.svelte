@@ -10,6 +10,7 @@
     import { fly } from 'svelte/transition';
     import { getNotificationsContext } from 'svelte-notifications';
     import { dialogs } from 'svelte-dialogs';
+    import IconButton from '@smui/icon-button';
 
     import SectionTitleUnderline from '../components/SectionTitleUnderline.svelte';
     import { supportedLanguages } from '../data/languages';
@@ -22,7 +23,7 @@
     import { getAllDisplayScreens } from '../stores/displayScreens';
     import ConfirmHoi4Path from '../components/ConfirmHoi4Path.svelte';
 
-    const { addNotification } = getNotificationsContext();
+    const { addNotification, removeNotification } = getNotificationsContext();
 
     let steamPath = api.getHoi4Path();
     let currentLocale = supportedLanguages.find((l) => l.key === $locale);
@@ -35,6 +36,7 @@
         renderer: supportedGameRenderers[0].value ?? null,
         language: supportedGameLanguages[0].value ?? null
     };
+    let refreshingDisplays = false;
 
     $: currentLocale && locale.set(currentLocale.key);
     $: if ('fullscreen' !== gameSettings.displayMode) {
@@ -64,16 +66,47 @@
         ).toString();
     }
 
+    async function handleScreenRefresh() {
+        try {
+            removeNotification('displays-refreshed');
+
+            refreshingDisplays = true;
+            await getAllDisplayScreens.update();
+
+            addNotification({
+                id: 'displays-refreshed',
+                text: $_('notification.displays_refreshed.success'),
+                position: 'top-center',
+                removeAfter: 5000,
+                type: 'success'
+            });
+        } catch (e) {
+            api.logs().error(e);
+
+            addNotification({
+                id: 'displays-refreshed',
+                text: $_('notification.displays_refreshed.error'),
+                position: 'top-center',
+                removeAfter: 5000,
+                type: 'danger'
+            });
+        }
+
+        refreshingDisplays = false;
+    }
+
     async function handleFolderPathSelect() {
         const path = await api.folderPathInput();
 
         if (api.isValidHoi4Folder(path)) {
             const confirm = await dialogs.modal(ConfirmHoi4Path, { path });
-            console.log(confirm);
+
+            api.logs().info(`Folder path changed to : ${path}`);
         } else {
+            removeNotification('hoi4-select-path-error');
             addNotification({
-                id: 'launch-error',
-                text: 'The path given does not look right. Please try again.',
+                id: 'hoi4-select-path-error',
+                text: $_('notification.select_hoi4_folder_path.error'),
                 position: 'top-center',
                 removeAfter: 5000,
                 type: 'danger'
@@ -90,10 +123,10 @@
         </div>
         <div class="form-field folder-select-container">
             <Button variant="raised" on:click={handleFolderPathSelect}>
-                <Label>Select</Label>
+                <Label>{$_('common.select')}</Label>
             </Button>
             <Textfield
-                label="Game folder"
+                label={$_('settings.game_folder')}
                 bind:value={gamePath}
                 type="text"
                 style="flex-grow: 1;"
@@ -132,12 +165,26 @@
         </div>
         <div class="form-field">
             <FormField>
-                <Select variant="outlined" bind:value={gameSettings.displayMonitor} label={$_('settings.monitor')}>
+                <Select
+                    disabled={refreshingDisplays}
+                    variant="outlined"
+                    bind:value={gameSettings.displayMonitor}
+                    label={$_('settings.monitor')}
+                >
                     {#each $getAllDisplayScreens as displayScreen, index}
                         <Option value={displayScreen.id}>{`${displayScreen.id} [${index}]`}</Option>
                     {/each}
                     <svelte:fragment slot="helperText">{$_('settings.monitor.description')}</svelte:fragment>
                 </Select>
+                <IconButton
+                    disabled={refreshingDisplays}
+                    class="material-icons"
+                    on:click={() => handleScreenRefresh()}
+                    touch
+                    size="button"
+                >
+                    sync
+                </IconButton>
             </FormField>
         </div>
         {#if 'fullscreen' === gameSettings.displayMode}

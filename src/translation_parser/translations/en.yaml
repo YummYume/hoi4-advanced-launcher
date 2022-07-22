@@ -1,3 +1,9 @@
+### Common
+common.confirm: Confirm
+common.cancel: Cancel
+common.select: Select
+common.something_went_wrong: Oops... An unexpected error occurred.
+
 ### Menu
 menu.home: Launcher
 menu.mods: Mods
@@ -9,20 +15,46 @@ home.launch_hoi4: Launch HOI4
 home.launch_parameters: Launch parameters
 home.launch_parameters.description: Change the launch parameters here.
 
+# Parameters
+parameters: Parameters
+parameters.invalid: 'Invalid parameter : {input}'
+parameters.enable_strict_mode: Enable strict mode
+parameter.no_description: No description provided.
+parameter.description.allowoldsave: >
+  Allows save games with older save game versions to be loaded with only a tooltip warning, instead of blocking them altogether.
+  Especially useful for testing shortly after increasing the save game version, since recent save games will still be loadable and relevant.
+parameter.description.autosave: Overrides the autosave interval in the user's settings.txt file.
+parameter.description.autosave_count: >
+  Overrides the debug_saves count in the user's settings.txt file. Specifies how many autosave files are kept before the oldest one is deleted when creating a new one.
+parameter.description.checksum: >
+  Computes and writes out the overall checksum and the checksum of each individual game data file to logs/system.log.
+  Useful when trying to identify if there is a modification to a single file, or some other file that exists but shouldn't, throwing off the checksum and blocking multiplayer.
+parameter.description.crash_data_log: >
+  Collects data on errors based on crashes that occur with critical bugs and malfunctions. Including if a buggy mod is activated from the launcher.
+parameter.description.debug: >
+  Indicates that the game is running in debug mode, enabling a variety of extra behavior to help with development or testing.
+  Can be turned on from the game console using the debug command. Disables multiplayer.
+
+# Arguments
+argument: Argument
+argument.description.autosave_count: Must be a number.
+
 ### Settings
 # Launcher settings
 settings.launcher: Launcher settings
+settings.game_folder: Game folder
 settings.language: Language
+
 # Game settings
 settings.game_settings: Game settings
 settings.game_settings.save: Save game settings
 settings.display_mode: Display mode
 settings.display_mode.description: The display mode of the game.
 settings.display_mode.fullscreen: Fullscreen
-settings.display_mode.borderless_fullscreen: Borderless Fullscreen
+settings.display_mode.borderless_fullscreen: Borderless fullscreen
 settings.display_mode.windowed: Windowed
 settings.monitor: Display monitor
-settings.monitor.description: The screen used for the game.
+settings.monitor.description: The display used for the game.
 settings.vsync.description: Enable VSync
 settings.refresh_rate: Refresh rate
 settings.refresh_rate.description: The refresh rate of the current display.
@@ -32,4 +64,22 @@ settings.renderer: Renderer
 settings.renderer.description: The renderer for the game. Does not have any effect on Linux.
 
 ### Notifications
-notification.launch_error.text: Something went wrong while launching the game.
+# Launch error
+notification.launch_error: Something went wrong while launching the game.
+
+# Displays refreshed
+notification.displays_refreshed.success: Display list refreshed.
+notification.displays_refreshed.error: Something went wrong while refreshing the display list.
+
+# Select path
+notification.select_hoi4_folder_path.error: The path given does not look right. Please try again.
+
+### Dialogs
+# Confirm path
+dialog.confirm_hoi4_path.title: Path confirmation
+dialog.confirm_hoi4_path.description: >
+  The path given looks right.
+  Before confirming, ensure this is the right path to your HOI4 game folder, as an invalid path could cause issues.
+
+# Parameter argument
+dialog.parameter_argument.invalid_argument: 'Invalid argument : {argument}'

@@ -1,3 +1,9 @@
+### Common
+common.confirm: Confirmer
+common.cancel: Annuler
+common.select: Sélectionner
+common.something_went_wrong: Oups... Une erreur inattendue s'est produite.
+
 ### Menu
 menu.home: Launcher
 menu.mods: Mods
@@ -9,10 +15,38 @@ home.launch_hoi4: Lancer HOI4
 home.launch_parameters: Paramètres de lancement
 home.launch_parameters.description: Changez les paramètres de lancement ici.
 
+# Parameters
+parameters: Paramètres
+parameters.invalid: 'Paramètre invalide : {input}'
+parameters.enable_strict_mode: Activer le mode strict
+parameter.no_description: Aucune description fournie.
+parameter.description.allowoldsave: >
+  Permet aux sauvegardes de jeux avec des versions de sauvegarde plus anciennes d'être chargées avec seulement un avertissement d'info-bulle, au lieu de les bloquer complètement.
+  Particulièrement utile pour tester peu de temps après avoir augmenté la version de la sauvegarde, car les sauvegardes récentes seront toujours chargeables et pertinentes.
+parameter.description.autosave: Remplace l'intervalle d'enregistrement automatique dans le fichier settings.txt de l'utilisateur.
+parameter.description.autosave_count: >
+  Remplace le nombre de debug_saves dans le fichier settings.txt de l'utilisateur.
+  Spécifie le nombre de fichiers de sauvegarde automatique conservés avant que le plus ancien ne soit supprimé lors de la création d'un nouveau.
+parameter.description.checksum: >
+  Calcule et écrit la somme de contrôle globale (checksum) et la somme de contrôle de chaque fichier de données de jeu individuel dans logs/system.log.
+  Utile lorsque vous essayez d'identifier s'il y a une modification d'un seul fichier, ou d'un autre fichier qui existe mais ne devrait pas, rejetant la somme de contrôle et bloquant le multijoueur.
+parameter.description.crash_data_log: >
+  Collecte des données sur les erreurs en fonction des plantages qui se produisent avec des bogues et des dysfonctionnements critiques.
+  Y compris si un mod bogué est activé depuis le launcher.
+parameter.description.debug: >
+  Indique que le jeu fonctionne en mode débogage, permettant une variété de comportements supplémentaires pour aider au développement ou aux tests.
+  Peut être activé à partir de la console de jeu à l'aide de la commande de débogage. Désactive le multijoueur.
+
+# Arguments
+argument: Argument
+argument.description.autosave_count: Doit être un nombre.
+
 ### Settings
 # Launcher settings
 settings.launcher: Paramètres du launcher
+settings.game_folder: Dossier du jeu
 settings.language: Langue
+
 # Game settings
 settings.game_settings: Paramètres de jeu
 settings.game_settings.save: Sauvegarder les paramètres de jeu
@@ -23,7 +57,7 @@ settings.display_mode.borderless_fullscreen: Plein écran sans bordure
 settings.display_mode.windowed: Fenêtré
 settings.monitor: Moniteur
 settings.monitor.description: Le moniteur utilisé pour le jeu.
-settings.vsync.description: Activer VSync
+settings.vsync.description: Activer la VSync
 settings.refresh_rate: Fréquence de rafraîchissement
 settings.refresh_rate.description: La fréquence de rafraîchissement du moniteur actuel.
 settings.game_language: Langue du jeu
@@ -32,4 +66,21 @@ settings.renderer: Moteur de rendu
 settings.renderer.description: Le moteur de rendu du jeu. N'a aucun effet sur Linux.
 
 ### Notifications
-notification.launch_error.text: Une erreur est survenue lors du lancement du jeu.
+notification.launch_error: Une erreur est survenue lors du lancement du jeu.
+
+# Displays refreshed
+notification.displays_refreshed.success: Liste des moniteurs actualisée.
+notification.displays_refreshed.error: Une erreur s'est produite lors de l'actualisation de la liste des moniteurs.
+
+# Select path
+notification.select_hoi4_folder_path.error: Le chemin indiqué ne semble pas correct. Veuillez réessayer.
+
+### Dialogs
+# Confirm path
+dialog.confirm_hoi4_path.title: Validation du chemin
+dialog.confirm_hoi4_path.description: >
+  Le chemin indiqué semble correct.
+  Avant de confirmer, assurez-vous qu'il s'agit du bon chemin vers votre dossier de jeu HOI4, car un chemin invalide pourrait causer des problèmes.
+
+# Parameter argument
+dialog.parameter_argument.invalid_argument: 'Argument invalide : {argument}'

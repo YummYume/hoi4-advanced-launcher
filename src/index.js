@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, Menu, screen, dialog } = require('electron');
 const path = require('path');
+const log = require('electron-log');
 
 const isDev = !app.isPackaged;
 
@@ -36,12 +37,26 @@ const createMenu = () => {
 };
 
 app.whenReady().then(() => {
+    log.catchErrors();
+
+    if (isDev) {
+        // Change the name manually in dev
+        const appName = 'HOI4 Advanced Launcher';
+        const appData = app.getPath('appData');
+
+        app.setName(appName);
+        app.setPath('userData', path.join(appData, appName));
+    }
+
     const mainWindow = createWindow();
 
     createMenu();
 
     ipcMain.handleOnce('getAppLocale', () => app.getLocale());
     ipcMain.handleOnce('closeApp', () => app.quit());
+    ipcMain.handleOnce('appDataPath', () => app.getPath('appData'));
+    ipcMain.handleOnce('appName', () => app.getName());
+    ipcMain.handleOnce('isDev', () => isDev);
     ipcMain.handle('getAllDisplays', () => screen.getAllDisplays());
     ipcMain.handle('openDirectoryDialog', async () => {
         const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {
@@ -64,6 +79,8 @@ app.whenReady().then(() => {
             createWindow();
         }
     });
+
+    log.info('Main ready.');
 });
 
 app.on('window-all-closed', function () {

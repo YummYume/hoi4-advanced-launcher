@@ -2,16 +2,15 @@
   "name": "hoi4-advanced-launcher",
   "productName": "HOI4 Advanced Launcher",
   "private": true,
-  "version": "0.1 BETA",
+  "version": "0.1.0",
   "main": "src/index.js",
   "scripts": {
     "start": "concurrently \"yarn dev\" \"yarn electron\"",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "electron": "electron src/index.js",
-    "dist": "vite build && electron-builder",
+    "dist": "yarn translations && vite build && yarn electron-builder",
     "translations": "node src/translation_parser/translationParser.js"
   },
   "devDependencies": {
@@ -33,6 +32,7 @@
     "concurrently": "^7.2.2",
     "electron": "^19.0.8",
     "electron-builder": "^23.1.0",
+    "electron-log": "^4.4.8",
     "js-yaml": "^4.1.0",
     "steam-game-path": "^2.2.0",
     "svelte": "^3.44.0",

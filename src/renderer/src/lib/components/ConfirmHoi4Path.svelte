@@ -1,6 +1,7 @@
 <script lang="ts">
     import Button, { Label as ButtonLabel } from '@smui/button';
     import { DialogContent, getClose, getOptions } from 'svelte-dialogs';
+    import { _ } from 'svelte-i18n';
 
     const close = getClose();
     const { titleId } = getOptions();
@@ -9,22 +10,19 @@
 </script>
 
 <DialogContent>
-    <h1 id={titleId} slot="header">Confirm your path</h1>
+    <h1 id={titleId} slot="header">{$_('dialog.confirm_hoi4_path.title')}</h1>
     <svelte:fragment slot="body">
-        <p>
-            The path given looks right. Before confirming, ensure this is the right path to your HOI4 game folder, as an
-            invalid path could cause issues.
-        </p>
+        <p>{$_('dialog.confirm_hoi4_path.description')}</p>
         <div class="path-content">
             <pre>{path}</pre>
         </div>
     </svelte:fragment>
     <svelte:fragment slot="footer">
         <Button on:click={() => close(false)}>
-            <ButtonLabel>Cancel</ButtonLabel>
+            <ButtonLabel>{$_('common.cancel')}</ButtonLabel>
         </Button>
         <Button defaultAction on:click={() => close(true)}>
-            <ButtonLabel>Confirm</ButtonLabel>
+            <ButtonLabel>{$_('common.confirm')}</ButtonLabel>
         </Button>
     </svelte:fragment>
 </DialogContent>

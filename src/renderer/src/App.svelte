@@ -3,10 +3,16 @@
     import Tab, { Label } from '@smui/tab';
     import TabBar from '@smui/tab-bar';
     import { isLoading, _ } from 'svelte-i18n';
+    import { onMount } from 'svelte';
 
     import { tabs } from './lib/data/tabs';
+    import { getAllDisplayScreens } from './lib/stores/displayScreens';
 
     let activeTab = tabs[0];
+
+    onMount(() => {
+        getAllDisplayScreens.load();
+    });
 </script>
 
 {#if $isLoading}

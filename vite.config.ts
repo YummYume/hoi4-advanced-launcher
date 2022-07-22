@@ -12,5 +12,8 @@ export default defineConfig({
         }
     },
     root: path.resolve(process.cwd(), 'src/renderer'),
-    base: './'
+    base: './',
+    build: {
+        target: 'esnext'
+    }
 });

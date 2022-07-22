@@ -2,11 +2,15 @@ const { contextBridge, ipcRenderer } = require('electron');
 const { getGamePath } = require('steam-game-path');
 const path = require('path');
 const fs = require('fs');
+const log = require('electron-log');
 
 const HOI4_APP_ID = 394360;
 
 let allScreens = [];
 let appLocale = 'en';
+let appDataPath = '';
+let appName = '';
+let isDev = false;
 
 async function updateScreensList() {
     return await ipcRenderer.invoke('getAllDisplays');
@@ -15,6 +19,19 @@ async function updateScreensList() {
 async function init() {
     allScreens = await updateScreensList();
     appLocale = await ipcRenderer.invoke('getAppLocale');
+    appName = await ipcRenderer.invoke('appName');
+    appDataPath = await ipcRenderer.invoke('appDataPath');
+    appDataPath = path.join(appDataPath, appName);
+    isDev = await ipcRenderer.invoke('isDev');
+
+    // Create log folder if it doesn't exist
+    const logsDir = path.join(appDataPath, 'logs');
+
+    if (!fs.existsSync(logsDir)) {
+        fs.mkdirSync(logsDir, { recursive: true });
+    }
+
+    log.info('Renderer API initialized');
 }
 
 function getExecutableName() {
@@ -51,16 +68,10 @@ function isValidHoi4Folder(path) {
 
 // This is just to make sure
 function isValidHoi4ExecutablePath(path) {
-    try {
-        dirPath = path.basename(path.dirname(path));
-        exeName = getExecutableName(path.split('/').at(-1));
+    dirPath = path.basename(path.dirname(path));
+    exeName = getExecutableName(path.split('\\').at(-1));
 
-        return isValidHoi4Folder(dirPath) && Boolean(exeName);
-    } catch (e) {
-        console.error(e);
-        throw e;
-        // TODO log
-    }
+    return isValidHoi4Folder(dirPath) && Boolean(exeName);
 }
 
 contextBridge.exposeInMainWorld('api', {
@@ -96,10 +107,21 @@ contextBridge.exposeInMainWorld('api', {
             .filter((fileName) => /^[a-z_\-]+.json$/.test(fileName));
     },
     getAllDisplayScreens: () => allScreens,
-    updateScreensList: async () => await updateScreensList(),
+    updateScreensList: async () => {
+        allScreens = await updateScreensList();
+
+        return allScreens;
+    },
     folderPathInput: async () => await ipcRenderer.invoke('openDirectoryDialog'),
+    isValidHoi4Folder: (path) => isValidHoi4Folder(path),
     isValidHoi4Folder: (path) => isValidHoi4Folder(path),
     closeApp: () => {
         ipcRenderer.send('close-app');
-    }
+    },
+    getAppDataPath: () => appDataPath,
+    getAppName: () => appName,
+    isDev: () => isDev,
+    logs: () => log.functions
 });
+
+log.info('Renderer ready.');

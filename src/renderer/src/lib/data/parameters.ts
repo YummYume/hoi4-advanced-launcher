@@ -5,8 +5,7 @@ export const parameters: Parameter[] = [
     },
     {
         key: '-allowoldsave',
-        description:
-            'Allows save games with older save game versions to be loaded with only a tooltip warning, instead of blocking them altogether. Especially useful for testing shortly after increasing the save game version, since recent save games will still be loadable and relevant.',
+        description: 'allowoldsave',
         matches: (value) => /^-allowoldsave(s)?\b$/.test(value)
     },
     {
@@ -24,7 +23,7 @@ export const parameters: Parameter[] = [
     {
         key: '-autosave',
         matches: (value) => /^-autosave=\b(NEVER|DAILY|WEEKLY|MONTHLY|HALFYEAR|YEARLY)\b$/.test(value),
-        description: "Overrides the autosave interval in the user's settings.txt file.",
+        description: 'autosave',
         argument: {
             allowAny: false,
             choices: ['NEVER', 'DAILY', 'WEEKLY', 'MONTHLY', 'HALFYEAR', 'YEARLY'],
@@ -34,29 +33,26 @@ export const parameters: Parameter[] = [
     {
         key: '-autosave_count',
         matches: (value) => /^-autosave_count=\b[0-9]*\b$/.test(value),
-        description:
-            "Overrides the debug_saves count in the user's settings.txt file. Specifies how many autosave files are kept before the oldest one is deleted when creating a new one.",
+        description: 'autosave_count',
         argument: {
             allowAny: true,
+            description: 'autosave_count',
             matches: (value) => /^\b[0-9]*\b$/.test(value)
         }
     },
     {
         key: '-checksum',
-        description:
-            "Computes and writes out the overall checksum and the checksum of each individual game data file to logs/system.log. Useful when trying to identify if there is a modification to a single file, or some other file that exists but shouldn't, throwing off the checksum and blocking multiplayer.",
+        description: 'checksum',
         matches: (value) => /^-checksum\b$/.test(value)
     },
     {
         key: '-crash_data_log',
-        description:
-            'Collects data on errors based on crashes that occur with critical bugs and malfunctions. Including if a buggy mod is activated from the launcher.',
+        description: 'crash_data_log',
         matches: (value) => /^-crash_data_log\b$/.test(value)
     },
     {
         key: '-debug',
-        description:
-            'Indicates that the game is running in debug mode, enabling a variety of extra behavior to help with development or testing. Can be turned on from the game console using the debug command.',
+        description: 'debug',
         matches: (value) => /^-debug\b$/.test(value)
     }
 ];

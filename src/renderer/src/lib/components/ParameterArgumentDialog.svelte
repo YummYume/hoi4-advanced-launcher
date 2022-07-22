@@ -5,6 +5,7 @@
     import Radio from '@smui/radio';
     import HelperText from '@smui/textfield/helper-text';
     import { DialogContent, getClose, getOptions } from 'svelte-dialogs';
+    import { _ } from 'svelte-i18n';
 
     import type { Parameter } from '../data/parameters';
 
@@ -23,20 +24,22 @@
     <h1 id={titleId} slot="header">This parameter requires an argument</h1>
     <svelte:fragment slot="body">
         {#if parameter.argument.description}
-            <p>{parameter.argument.description}</p>
+            <p>{$_(`argument.description.${parameter.argument.description}`)}</p>
         {/if}
         {#if parameter.argument.allowAny}
             <Textfield
                 style="width: 100%;"
                 helperLine$style="width: 100%;"
-                label="Argument"
+                label={$_('argument')}
                 bind:value={argument}
                 type="text"
-                invalid={strictMode && !isValid}
+                invalid={strictMode && !isValid && Boolean(argument)}
             >
                 <HelperText slot="helper" style="color: #b00020;">
                     {#if strictMode}
-                        {!isValid ? `Invalid argument : ${argument}` : ''}
+                        {!isValid && Boolean(argument)
+                            ? $_('dialog.parameter_argument.invalid_argument', { values: { argument } })
+                            : ''}
                     {/if}
                 </HelperText>
             </Textfield>
@@ -55,10 +58,14 @@
     </svelte:fragment>
     <svelte:fragment slot="footer">
         <Button on:click={() => close(null)}>
-            <ButtonLabel>Cancel</ButtonLabel>
+            <ButtonLabel>{$_('common.cancel')}</ButtonLabel>
         </Button>
-        <Button defaultAction disabled={strictMode && !isValid} on:click={() => close(argument)}>
-            <ButtonLabel>Confirm</ButtonLabel>
+        <Button
+            defaultAction
+            disabled={strictMode && (!isValid || !Boolean(argument))}
+            on:click={() => close(argument)}
+        >
+            <ButtonLabel>{$_('common.confirm')}</ButtonLabel>
         </Button>
     </svelte:fragment>
 </DialogContent>
