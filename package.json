@@ -32,9 +32,7 @@
     "concurrently": "^7.2.2",
     "electron": "^19.0.8",
     "electron-builder": "^23.1.0",
-    "electron-log": "^4.4.8",
     "js-yaml": "^4.1.0",
-    "steam-game-path": "^2.2.0",
     "svelte": "^3.44.0",
     "svelte-check": "^2.2.7",
     "svelte-dialogs": "^1.2.2",
@@ -50,5 +48,9 @@
       "src/**/*"
     ]
   },
-  "dependencies": {}
+  "dependencies": {
+    "electron-log": "^4.4.8",
+    "json-fixer": "^1.6.13",
+    "steam-game-path": "^2.2.0"
+  }
 }

@@ -21,7 +21,7 @@
 </script>
 
 <DialogContent>
-    <h1 id={titleId} slot="header">This parameter requires an argument</h1>
+    <h1 id={titleId} slot="header">{$_('argument.parameter_requires.title')}</h1>
     <svelte:fragment slot="body">
         {#if parameter.argument.description}
             <p>{$_(`argument.description.${parameter.argument.description}`)}</p>

@@ -39,6 +39,7 @@ parameter.description.debug: >
 
 # Arguments
 argument: Argument
+argument.parameter_requires.title: Ce paramètre nécessite un argument
 argument.description.autosave_count: Doit être un nombre.
 
 ### Settings
@@ -49,7 +50,6 @@ settings.language: Langue
 
 # Game settings
 settings.game_settings: Paramètres de jeu
-settings.game_settings.save: Sauvegarder les paramètres de jeu
 settings.display_mode: Mode d'affichage
 settings.display_mode.description: Le mode d'affichage du jeu.
 settings.display_mode.fullscreen: Plein écran
@@ -60,20 +60,35 @@ settings.monitor.description: Le moniteur utilisé pour le jeu.
 settings.vsync.description: Activer la VSync
 settings.refresh_rate: Fréquence de rafraîchissement
 settings.refresh_rate.description: La fréquence de rafraîchissement du moniteur actuel.
+settings.fullscreen_resolution: Résolution plein écran
+settings.fullscreen_resolution.description: La résolution plein écran du jeu.
+settings.windowed_resolution: Résolution fenêtrée
+settings.windowed_resolution.description: La résolution fenêtrée du jeu.
 settings.game_language: Langue du jeu
 settings.game_language.description: La langue utilisée dans le jeu.
 settings.renderer: Moteur de rendu
 settings.renderer.description: Le moteur de rendu du jeu. N'a aucun effet sur Linux.
 
+# Global settings
+settings.options: Options
+settings.options.open_logs: Ouvrir le dossier des logs
+
 ### Notifications
 notification.launch_error: Une erreur est survenue lors du lancement du jeu.
+notification.invalid_hoi4_executable_path: >
+  Votre chemin d'exécutable pour HOI4 semble erroné. Cela est probablement dû à un chemin du dossier de jeu invalide dans vos paramètres.
 
 # Displays refreshed
 notification.displays_refreshed.success: Liste des moniteurs actualisée.
 notification.displays_refreshed.error: Une erreur s'est produite lors de l'actualisation de la liste des moniteurs.
 
 # Select path
-notification.select_hoi4_folder_path.error: Le chemin indiqué ne semble pas correct. Veuillez réessayer.
+notification.select_hoi4_folder_path.invalid: Le chemin indiqué ne semble pas correct. Veuillez réessayer.
+notification.select_hoi4_folder_path.success: Le chemin a été modifié avec succès.
+notification.select_hoi4_folder_path.error: Une erreur s'est produite lors de la modification du chemin.
+
+# Save settings
+notification.save_settings_status.error: Une erreur s'est produite lors de l'enregistrement des paramètres.
 
 ### Dialogs
 # Confirm path

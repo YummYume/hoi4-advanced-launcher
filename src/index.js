@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu, screen, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, screen, dialog, shell } = require('electron');
 const path = require('path');
 const log = require('electron-log');
 
@@ -24,10 +24,13 @@ const createWindow = () => {
 
     if (isDev) {
         mainWindow.loadURL('http://localhost:3000');
-        mainWindow.webContents.openDevTools();
+        // mainWindow.webContents.openDevTools();
     } else {
         mainWindow.loadFile(path.join(__dirname, 'renderer/dist/index.html'));
     }
+
+    // TEMPORARY
+    mainWindow.webContents.openDevTools();
 
     return mainWindow;
 };
@@ -38,6 +41,7 @@ const createMenu = () => {
 
 app.whenReady().then(() => {
     log.catchErrors();
+    log.info('App launched.');
 
     if (isDev) {
         // Change the name manually in dev
@@ -55,6 +59,7 @@ app.whenReady().then(() => {
     ipcMain.handleOnce('getAppLocale', () => app.getLocale());
     ipcMain.handleOnce('closeApp', () => app.quit());
     ipcMain.handleOnce('appDataPath', () => app.getPath('appData'));
+    ipcMain.handleOnce('userDocumentsPath', () => app.getPath('documents'));
     ipcMain.handleOnce('appName', () => app.getName());
     ipcMain.handleOnce('isDev', () => isDev);
     ipcMain.handle('getAllDisplays', () => screen.getAllDisplays());
@@ -69,8 +74,13 @@ app.whenReady().then(() => {
             return filePaths[0];
         }
     });
+    ipcMain.handle('openFolder', async (event, ...args) => {
+        return await shell.openPath(...args);
+    });
 
     ipcMain.on('close-app', () => {
+        log.info('App closed.');
+
         app.quit();
     });
 
@@ -85,6 +95,8 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
+        log.info('App closed.');
+
         app.quit();
     }
 });

@@ -43,5 +43,5 @@ An advanced launcher for HOI4.
 - The UI library used is [Svelte Material UI](https://sveltematerialui.com). Css is written directly in modules most of the time, except for a few global configs in the `global.css` file. Try not to use SASS for this project if possible (would be overkill).
 - When you want to add a new [Svelte Material UI](https://sveltematerialui.com) component, make sure to only install the said component (and not the whole library).
 - Notifications are managed by [Svelte Notifications](https://github.com/keenethics/svelte-notifications) and dialogs by [Svelte Dialogs](https://github.com/bibizio/svelte-dialogs). Do not use Material UI for those.
-- When adding a new dependency, always add it as a dev dependency and ensure the library is actively **maintained** and is **needed** (we do not want to use unnecessary libraries). Other than that, every additional library is welcomed.
+- When adding a new dependency, always add it as a dev dependency (unless used by `index.js` or `preload.js`) and ensure the library is actively **maintained** and is **needed** (we do not want to use unnecessary libraries). Other than that, every additional library is welcomed.
 - This project is not using Docker on purpose. It generally offers a poor developer experience with Electron and is not required because of the so few requirements.

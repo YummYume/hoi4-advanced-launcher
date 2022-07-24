@@ -9,16 +9,29 @@
     import { launchParameters } from '../stores/launchParameters';
     import Parameters from '../components/Parameters.svelte';
 
-    const hoi4Path = api.getHoi4ExecutablePath();
-    const { addNotification } = getNotificationsContext();
+    const { addNotification, removeNotification } = getNotificationsContext();
 
     let strictMode = true;
     let parametersPanelOpened = false;
     let parameterErrorMessage = null;
 
     function launchHoi4(): void {
+        removeNotification('launch-error');
+
+        if (!api.isValidHoi4ExecutablePath(api.getHoi4ExecutablePath())) {
+            addNotification({
+                id: 'launch-error',
+                text: $_('notification.invalid_hoi4_executable_path'),
+                position: 'top-center',
+                removeAfter: 5000,
+                type: 'danger'
+            });
+
+            return;
+        }
+
         try {
-            api.launchHoi4(hoi4Path, $launchParameters.split(' '));
+            api.launchHoi4($launchParameters.split(' '));
         } catch (e) {
             api.logs().error(e);
 
@@ -35,11 +48,7 @@
 
 <section in:fade class="container">
     <div class="top-row">
-        <Button
-            variant="outlined"
-            on:click={launchHoi4}
-            disabled={Boolean((strictMode && parameterErrorMessage) || !hoi4Path)}
-        >
+        <Button variant="outlined" on:click={launchHoi4} disabled={Boolean(strictMode && parameterErrorMessage)}>
             <ButtonLabel>{$_('home.launch_hoi4')}</ButtonLabel>
         </Button>
     </div>

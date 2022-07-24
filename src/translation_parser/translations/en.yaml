@@ -37,6 +37,7 @@ parameter.description.debug: >
 
 # Arguments
 argument: Argument
+argument.parameter_requires.title: This parameter requires an argument
 argument.description.autosave_count: Must be a number.
 
 ### Settings
@@ -47,7 +48,6 @@ settings.language: Language
 
 # Game settings
 settings.game_settings: Game settings
-settings.game_settings.save: Save game settings
 settings.display_mode: Display mode
 settings.display_mode.description: The display mode of the game.
 settings.display_mode.fullscreen: Fullscreen
@@ -58,21 +58,36 @@ settings.monitor.description: The display used for the game.
 settings.vsync.description: Enable VSync
 settings.refresh_rate: Refresh rate
 settings.refresh_rate.description: The refresh rate of the current display.
+settings.fullscreen_resolution: Fullscreen resolution
+settings.fullscreen_resolution.description: The fullscreen resolution of the game.
+settings.windowed_resolution: Windowed resolution
+settings.windowed_resolution.description: The windowed resolution of the game.
 settings.game_language: Game language
 settings.game_language.description: The language used in the game.
 settings.renderer: Renderer
 settings.renderer.description: The renderer for the game. Does not have any effect on Linux.
 
+# Global settings
+settings.options: Options
+settings.options.open_logs: Open logs folder
+
 ### Notifications
 # Launch error
 notification.launch_error: Something went wrong while launching the game.
+notification.invalid_hoi4_executable_path: >
+  Your HOI4 executable path seems wrong. This is most likely due to an invalid game folder path in your settings.
 
 # Displays refreshed
 notification.displays_refreshed.success: Display list refreshed.
 notification.displays_refreshed.error: Something went wrong while refreshing the display list.
 
 # Select path
-notification.select_hoi4_folder_path.error: The path given does not look right. Please try again.
+notification.select_hoi4_folder_path.invalid: The path given does not look right. Please try again.
+notification.select_hoi4_folder_path.success: Path successfully changed.
+notification.select_hoi4_folder_path.error: Something went wrong while changing the path.
+
+# Save settings
+notification.save_settings_status.error: Something went wrong while saving the settings.
 
 ### Dialogs
 # Confirm path

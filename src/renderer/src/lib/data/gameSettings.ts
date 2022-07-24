@@ -31,6 +31,19 @@ export const supportedRefreshRates: RefreshRate[] = [
     { label: '50', value: '50' }
 ];
 
+export const supportedScreenResolutions: ScreenResolution[] = [
+    { label: '7680x4320', value: '7680x4320' },
+    { label: '3840x2160', value: '3840x2160' },
+    { label: '2048x1080', value: '2048x1080' },
+    { label: '2560x1440', value: '2560x1440' },
+    { label: '1920x1080', value: '1920x1080' },
+    { label: '1680x1050', value: '1680x1050' },
+    { label: '1280x720', value: '1280x720' },
+    { label: '1024x768', value: '1024x768' },
+    { label: '960x640', value: '960x640' },
+    { label: '640x480', value: '640x480' }
+];
+
 export interface GameDisplayMode {
     label: string;
     value: string;
@@ -47,6 +60,11 @@ export interface GameRenderer {
 }
 
 export interface RefreshRate {
+    label: string;
+    value: string;
+}
+
+export interface ScreenResolution {
     label: string;
     value: string;
 }

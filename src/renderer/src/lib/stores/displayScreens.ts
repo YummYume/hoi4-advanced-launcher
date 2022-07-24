@@ -16,7 +16,7 @@ export const displayScreensLoaded = (() => {
     };
 })();
 
-export const getAllDisplayScreens = (() => {
+export const displayScreens = (() => {
     const { subscribe, set }: Writable<DisplayScreen[]> = writable([]);
 
     return {

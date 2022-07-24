@@ -18,52 +18,103 @@
         supportedGameDisplayModes,
         supportedGameLanguages,
         supportedGameRenderers,
-        supportedRefreshRates
+        supportedRefreshRates,
+        supportedScreenResolutions
     } from '../data/gameSettings';
-    import { getAllDisplayScreens } from '../stores/displayScreens';
+    import { displayScreens } from '../stores/displayScreens';
     import ConfirmHoi4Path from '../components/ConfirmHoi4Path.svelte';
+    import { gameSettings } from '../stores/gameSettings';
 
     const { addNotification, removeNotification } = getNotificationsContext();
 
     let steamPath = api.getHoi4Path();
     let currentLocale = supportedLanguages.find((l) => l.key === $locale);
-    let gameSettings = {
-        displayMode: supportedGameDisplayModes[0].value ?? null,
-        displayMonitor: $getAllDisplayScreens[0].id.toString() ?? null,
-        screenResolution: '',
-        vSync: false,
-        refreshRate: '60',
-        renderer: supportedGameRenderers[0].value ?? null,
-        language: supportedGameLanguages[0].value ?? null
-    };
+    let currentGameSettings = $gameSettings;
+    let savedGameSettings = { ...currentGameSettings };
     let refreshingDisplays = false;
 
     $: currentLocale && locale.set(currentLocale.key);
-    $: if ('fullscreen' !== gameSettings.displayMode) {
-        gameSettings.vSync = false;
+    $: if ('fullscreen' !== currentGameSettings.Graphics.display_mode.value) {
+        currentGameSettings.Graphics.vsync.enabled = false;
     }
-    $: if ('fullscreen' !== gameSettings.displayMode || true === gameSettings.vSync) {
-        const allRefreshRates = getAllRefreshRatesForCurrentMonitor(gameSettings.displayMonitor);
+    $: if (
+        'fullscreen' !== currentGameSettings.Graphics.display_mode.value ||
+        true === currentGameSettings.Graphics.vsync.enabled
+    ) {
+        const allRefreshRates = getAllRefreshRatesForCurrentMonitor(currentGameSettings.Graphics.display_index.value);
 
-        gameSettings.refreshRate = allRefreshRates[0].value;
+        currentGameSettings.Graphics.refreshRate.value = allRefreshRates.at(0).value;
     }
-    $: gameSettings.displayMonitor, regulateRefreshRate();
-    $: refreshRatesForCurrentMonitor = getAllRefreshRatesForCurrentMonitor(gameSettings.displayMonitor);
-    $: gamePath = steamPath.game.path || '';
+    $: refreshRatesForCurrentMonitor = getAllRefreshRatesForCurrentMonitor(
+        currentGameSettings.Graphics.display_index.value
+    );
+    $: resolutionsForCurrentMonitor = getAllResolutionsForCurrentMonitor(
+        currentGameSettings.Graphics.display_index.value
+    );
+    $: currentGameSettings.Graphics.display_index.value, regulateRefreshRate();
+    $: currentGameSettings.Graphics.display_index.value, regulateResolution();
+    $: gamePath = steamPath ?? '';
+    $: currentGameSettings, handleSettingsSave();
 
-    function getAllRefreshRatesForCurrentMonitor(displayId: string) {
-        const display = $getAllDisplayScreens.find((s) => displayId === s.id);
+    function getAllRefreshRatesForCurrentMonitor(displayIndex: string) {
+        if (!$displayScreens.length) {
+            return supportedRefreshRates;
+        }
+
+        const display = $displayScreens.at(parseInt(displayIndex));
 
         return supportedRefreshRates.filter((r) => parseInt(r.value) <= display.displayFrequency);
     }
 
-    function regulateRefreshRate() {
-        const maxRefreshRate = getAllRefreshRatesForCurrentMonitor(gameSettings.displayMonitor)[0];
+    function getAllResolutionsForCurrentMonitor(displayIndex: string) {
+        if (!$displayScreens.length) {
+            return supportedScreenResolutions;
+        }
 
-        gameSettings.refreshRate = Math.min(
-            parseInt(gameSettings.refreshRate),
+        const display = $displayScreens.at(parseInt(displayIndex));
+
+        return supportedScreenResolutions.filter((r) => {
+            const widthAndHeight = r.label.split('x');
+            const width = parseInt(widthAndHeight.at(0));
+            const height = parseInt(widthAndHeight.at(1));
+
+            return display.size.width >= width && display.size.height >= height;
+        });
+    }
+
+    function regulateRefreshRate() {
+        const maxRefreshRate = refreshRatesForCurrentMonitor.at(0);
+
+        currentGameSettings.Graphics.refreshRate.value = Math.min(
+            parseInt(currentGameSettings.Graphics.refreshRate.value),
             parseInt(maxRefreshRate.value)
         ).toString();
+    }
+
+    function regulateResolution() {
+        const maxResolution = resolutionsForCurrentMonitor.at(0).value;
+        const maxResolutionWidth = maxResolution.split('x').at(0);
+        const maxResolutionHeight = maxResolution.split('x').at(1);
+        const fullscreenResolution = currentGameSettings.Graphics.fullscreen_resolution.value.split('x');
+        const fullscreenResolutionWidth = fullscreenResolution.at(0);
+        const fullscreenResolutionHeight = fullscreenResolution.at(1);
+        const windowedResolution = currentGameSettings.Graphics.windowed_resolution.value.split('x');
+        const windowedResolutionWidth = windowedResolution.at(0);
+        const windowedResolutionHeight = windowedResolution.at(1);
+
+        if (
+            parseInt(fullscreenResolutionWidth) > parseInt(maxResolutionWidth) ||
+            parseInt(fullscreenResolutionHeight) > parseInt(maxResolutionHeight)
+        ) {
+            currentGameSettings.Graphics.fullscreen_resolution.value = maxResolution;
+        }
+
+        if (
+            parseInt(windowedResolutionWidth) > parseInt(maxResolutionWidth) ||
+            parseInt(windowedResolutionHeight) > parseInt(maxResolutionHeight)
+        ) {
+            currentGameSettings.Graphics.fullscreen_resolution.value = maxResolution;
+        }
     }
 
     async function handleScreenRefresh() {
@@ -71,7 +122,9 @@
             removeNotification('displays-refreshed');
 
             refreshingDisplays = true;
-            await getAllDisplayScreens.update();
+            await displayScreens.update();
+
+            api.logs().info('Display list refreshed.');
 
             addNotification({
                 id: 'displays-refreshed',
@@ -101,17 +154,52 @@
         if (api.isValidHoi4Folder(path)) {
             const confirm = await dialogs.modal(ConfirmHoi4Path, { path });
 
-            api.logs().info(`Folder path changed to : ${path}`);
+            if (confirm) {
+                api.logs().info(`Folder path changed to : ${path}`);
+
+                addNotification({
+                    id: 'hoi4-select-path-success',
+                    text: $_('notification.select_hoi4_folder_path.success'),
+                    position: 'top-center',
+                    removeAfter: 5000,
+                    type: 'success'
+                });
+            }
         } else {
             removeNotification('hoi4-select-path-error');
             addNotification({
                 id: 'hoi4-select-path-error',
-                text: $_('notification.select_hoi4_folder_path.error'),
+                text: $_('notification.select_hoi4_folder_path.invalid'),
                 position: 'top-center',
                 removeAfter: 5000,
                 type: 'danger'
             });
         }
+    }
+
+    async function handleSettingsSave() {
+        removeNotification('hoi4-save-settings-status');
+
+        try {
+            await gameSettings.save();
+            api.logs().info('Settings saved.');
+
+            savedGameSettings = { ...currentGameSettings };
+        } catch (e) {
+            api.logs().error(e);
+
+            addNotification({
+                id: 'hoi4-save-settings-status',
+                text: $_('notification.save_settings_status.error'),
+                position: 'top-center',
+                removeAfter: 5000,
+                type: 'error'
+            });
+        }
+    }
+
+    async function handleLogsFolderOpen() {
+        await api.openLogsFolder();
     }
 </script>
 
@@ -153,7 +241,11 @@
         </div>
         <div class="form-field">
             <FormField>
-                <Select variant="outlined" bind:value={gameSettings.displayMode} label={$_('settings.display_mode')}>
+                <Select
+                    variant="outlined"
+                    bind:value={currentGameSettings.Graphics.display_mode.value}
+                    label={$_('settings.display_mode')}
+                >
                     {#each supportedGameDisplayModes as supportedGameDisplayMode}
                         <Option value={supportedGameDisplayMode.value}>
                             {$_(`settings.display_mode.${supportedGameDisplayMode.label}`)}
@@ -168,11 +260,11 @@
                 <Select
                     disabled={refreshingDisplays}
                     variant="outlined"
-                    bind:value={gameSettings.displayMonitor}
+                    bind:value={currentGameSettings.Graphics.display_index.value}
                     label={$_('settings.monitor')}
                 >
-                    {#each $getAllDisplayScreens as displayScreen, index}
-                        <Option value={displayScreen.id}>{`${displayScreen.id} [${index}]`}</Option>
+                    {#each $displayScreens as displayScreen, index}
+                        <Option value={index.toString()}>{`${displayScreen.id} [${index}]`}</Option>
                     {/each}
                     <svelte:fragment slot="helperText">{$_('settings.monitor.description')}</svelte:fragment>
                 </Select>
@@ -187,20 +279,20 @@
                 </IconButton>
             </FormField>
         </div>
-        {#if 'fullscreen' === gameSettings.displayMode}
+        {#if 'fullscreen' === currentGameSettings.Graphics.display_mode.value}
             <div class="form-field" in:fly|local={{ x: -200, duration: 300 }} out:fly|local={{ x: 200, duration: 300 }}>
                 <FormField>
-                    <Switch bind:checked={gameSettings.vSync} />
+                    <Switch bind:checked={currentGameSettings.Graphics.vsync.enabled} />
                     <span slot="label">{$_('settings.vsync.description')}</span>
                 </FormField>
             </div>
         {/if}
-        {#if 'fullscreen' === gameSettings.displayMode && false === gameSettings.vSync}
+        {#if 'fullscreen' === currentGameSettings.Graphics.display_mode.value && false === currentGameSettings.Graphics.vsync.enabled}
             <div class="form-field" in:fly|local={{ x: -200, duration: 300 }} out:fly|local={{ x: 200, duration: 300 }}>
                 <FormField>
                     <Select
                         variant="outlined"
-                        bind:value={gameSettings.refreshRate}
+                        bind:value={currentGameSettings.Graphics.refreshRate.value}
                         label={$_('settings.refresh_rate')}
                     >
                         {#each refreshRatesForCurrentMonitor as refreshRate}
@@ -213,9 +305,52 @@
                 </FormField>
             </div>
         {/if}
+        {#if 'windowed' === currentGameSettings.Graphics.display_mode.value}
+            <div class="form-field" in:fly|local={{ x: -200, duration: 300 }} out:fly|local={{ x: 200, duration: 300 }}>
+                <FormField>
+                    <Select
+                        variant="outlined"
+                        bind:value={currentGameSettings.Graphics.windowed_resolution.value}
+                        label={$_('settings.windowed_resolution')}
+                    >
+                        {#each resolutionsForCurrentMonitor as resolution}
+                            <Option value={resolution.value}>
+                                {resolution.label}
+                            </Option>
+                        {/each}
+                        <svelte:fragment slot="helperText"
+                            >{$_('settings.windowed_resolution.description')}</svelte:fragment
+                        >
+                    </Select>
+                </FormField>
+            </div>
+        {:else}
+            <div class="form-field" in:fly|local={{ x: -200, duration: 300 }} out:fly|local={{ x: 200, duration: 300 }}>
+                <FormField>
+                    <Select
+                        variant="outlined"
+                        bind:value={currentGameSettings.Graphics.fullscreen_resolution.value}
+                        label={$_('settings.fullscreen_resolution')}
+                    >
+                        {#each resolutionsForCurrentMonitor as resolution}
+                            <Option value={resolution.value}>
+                                {resolution.label}
+                            </Option>
+                        {/each}
+                        <svelte:fragment slot="helperText"
+                            >{$_('settings.fullscreen_resolution.description')}</svelte:fragment
+                        >
+                    </Select>
+                </FormField>
+            </div>
+        {/if}
         <div class="form-field">
             <FormField>
-                <Select variant="outlined" bind:value={gameSettings.language} label={$_('settings.game_language')}>
+                <Select
+                    variant="outlined"
+                    bind:value={currentGameSettings.System.language.value}
+                    label={$_('settings.game_language')}
+                >
                     {#each supportedGameLanguages as supportedGameLanguage}
                         <Option value={supportedGameLanguage.value}>
                             {supportedGameLanguage.label}
@@ -227,7 +362,11 @@
         </div>
         <div class="form-field">
             <FormField>
-                <Select variant="outlined" bind:value={gameSettings.renderer} label={$_('settings.renderer')}>
+                <Select
+                    variant="outlined"
+                    bind:value={currentGameSettings.Graphics.renderer.value}
+                    label={$_('settings.renderer')}
+                >
                     {#each supportedGameRenderers as supportedGameRenderer}
                         <Option value={supportedGameRenderer.value}>
                             {supportedGameRenderer.label}
@@ -237,9 +376,15 @@
                 </Select>
             </FormField>
         </div>
-        <div class="save-button">
-            <Button variant="raised">
-                <Label>{$_('settings.game_settings.save')}</Label>
+    </div>
+    <div class="section">
+        <div class="section-title">
+            <span class="title">{$_('settings.options')}</span>
+            <SectionTitleUnderline />
+        </div>
+        <div class="form-field">
+            <Button variant="raised" on:click={() => handleLogsFolderOpen()}>
+                <Label>{$_('settings.options.open_logs')}</Label>
             </Button>
         </div>
     </div>
@@ -273,9 +418,5 @@
 
     .form-field {
         margin: 20px 0;
-    }
-
-    .save-button {
-        padding-bottom: 2rem;
     }
 </style>

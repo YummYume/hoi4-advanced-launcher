@@ -1,0 +1,36 @@
+"Graphics"={
+    "display_index"={
+        value="{DISPLAY_INDEX_VALUE}"
+        version={DISPLAY_INDEX_VERSION}
+    }
+    "display_mode"={
+        value="{DISPLAY_MODE_VALUE}"
+        version={DISPLAY_MODE_VERSION}
+    }
+    "fullscreen_resolution"={
+        value="{FULLSCREEN_RESOLUTION_VALUE}"
+        version={FULLSCREEN_RESOLUTION_VERSION}
+    }
+    "vsync"={
+        enabled={VSYNC_ENABLED}
+        version={VSYNC_VERSION}
+    }
+    "refreshRate"={
+        value={REFRESH_RATE_VALUE}
+        version={REFRESH_RATE_VERSION}
+    }
+    "windowed_resolution"={
+        value="{WINDOWED_RESOLUTION_VALUE}"
+        version={WINDOWED_RESOLUTION_VERSION}
+    }
+    "renderer"={
+        value="{RENDERER_VALUE}"
+        version={RENDERER_VERSION}
+    }
+}
+"System"={
+    "language"={
+        value="{LANGUAGE_VALUE}"
+        version={LANGUAGE_VERSION}
+    }
+}

@@ -18,13 +18,13 @@
 
     const { addNotification, removeNotification } = getNotificationsContext();
 
-    $: launchParameters = strictMode ? launchParameters.replace(/ +(?= )/g, '') : launchParameters;
+    $: launchParameters = strictMode ? launchParameters.replace(/  +/g, ' ') : launchParameters;
     $: inputParameters = launchParameters.trim().split(' ');
     $: selected = parameters.filter((value) => inputParameters.some((v) => value.matches(v)));
     $: {
         parameterErrorMessage = null;
 
-        if (Boolean('' !== launchParameters && inputParameters)) {
+        if (Boolean('' !== launchParameters.trim() && inputParameters)) {
             inputParameters.every((input) => {
                 if (!parameters.some((parameter) => parameter.matches(input))) {
                     parameterErrorMessage = $_('parameters.invalid', { values: { input } });
@@ -80,6 +80,7 @@
         }
 
         launchParameters = currentParameters.join(' ');
+        launchParameters = launchParameters.trim();
     }
 </script>
 

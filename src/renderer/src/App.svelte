@@ -6,12 +6,14 @@
     import { onMount } from 'svelte';
 
     import { tabs } from './lib/data/tabs';
-    import { getAllDisplayScreens } from './lib/stores/displayScreens';
+    import { displayScreens } from './lib/stores/displayScreens';
+    import { gameSettings } from './lib/stores/gameSettings';
 
     let activeTab = tabs[0];
 
     onMount(() => {
-        getAllDisplayScreens.load();
+        displayScreens.load();
+        gameSettings.load();
     });
 </script>
 

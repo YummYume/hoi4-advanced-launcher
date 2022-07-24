@@ -2,40 +2,69 @@ const { contextBridge, ipcRenderer } = require('electron');
 const { getGamePath } = require('steam-game-path');
 const path = require('path');
 const fs = require('fs');
+const fsPromises = require('fs/promises');
 const log = require('electron-log');
+const jsonFix = require('json-fixer');
 
 const HOI4_APP_ID = 394360;
+const paths = {
+    exePath: '',
+    appDataPath: '',
+    gameDataPath: '',
+    logsDirPath: '',
+    gameDirPath: getGamePath(HOI4_APP_ID)?.game?.path,
+    settingsFilePath: ''
+};
 
+let apiInitialized = false;
+let gameDataInitialized = false;
 let allScreens = [];
 let appLocale = 'en';
-let appDataPath = '';
-let appName = '';
+let appName = 'HOI4 Advanced Launcher';
 let isDev = false;
+let gameSettings = null;
 
-async function updateScreensList() {
-    return await ipcRenderer.invoke('getAllDisplays');
+function throwAndLogError(errorMessage) {
+    log.error(errorMessage);
+
+    throw new Error(errorMessage);
 }
 
-async function init() {
-    allScreens = await updateScreensList();
-    appLocale = await ipcRenderer.invoke('getAppLocale');
-    appName = await ipcRenderer.invoke('appName');
-    appDataPath = await ipcRenderer.invoke('appDataPath');
-    appDataPath = path.join(appDataPath, appName);
-    isDev = await ipcRenderer.invoke('isDev');
+function denyIfApiNotInitialized() {
+    if (!apiInitialized) {
+        throwAndLogError('Renderer API not initialized.');
+    }
+}
 
-    // Create log folder if it doesn't exist
-    const logsDir = path.join(appDataPath, 'logs');
+function denyIfGameDataNotInitialized() {
+    if (!gameDataInitialized) {
+        throwAndLogError('Game data not initialized.');
+    }
+}
 
-    if (!fs.existsSync(logsDir)) {
-        fs.mkdirSync(logsDir, { recursive: true });
+function isValidHoi4Folder(pathName) {
+    pathName = pathName ?? '';
+
+    if (!fs.existsSync(pathName)) {
+        throwAndLogError('Invalid HOI4 folder path.');
     }
 
-    log.info('Renderer API initialized');
+    const folderFiles = fs.readdirSync(pathName);
+    const hasLauncherSettings = folderFiles.some((e) => 'launcher-settings.json' === e);
+    const hasGameExe = folderFiles.some((e) => (getExecutableName() ? getExecutableName() === e : false));
+
+    return hasLauncherSettings && hasGameExe;
+}
+
+function isValidHoi4ExecutablePath(pathName) {
+    dirPath = path.dirname(pathName);
+    exeName = paths.exePath === pathName;
+
+    return isValidHoi4Folder(dirPath) && exeName;
 }
 
 function getExecutableName() {
-    let executableName;
+    let executableName = '';
 
     switch (process.platform) {
         case 'win32':
@@ -48,65 +77,208 @@ function getExecutableName() {
             executableName = 'hoi4';
             break;
         default:
-            throw new Error(`OS ${process.platform} is not supported.`);
+            log.error(`OS ${process.platform} is not supported. Cannot get executable name.`);
     }
 
     return executableName;
 }
 
-function isValidHoi4Folder(path) {
-    if (!fs.existsSync(path)) {
-        throw new Error('Invalid path.');
+function parsePdxSettings(settings) {
+    try {
+        // Those regex could be improved in the future, but they will do for now
+        // Replaces = by :
+        settings = '{' + settings.replace(/=/gm, ':') + '}';
+        // Put everything between ""
+        settings = settings.replace(/([a-zA-Z0-9_-]+)/gm, '"$1"');
+        // Removes double ""
+        settings = settings.replace(/""/gm, '"');
+        // Fixes colons
+        const { data } = jsonFix(settings);
+
+        data.Graphics.vsync.enabled = 'yes' === data.Graphics.vsync.enabled ? true : false;
+
+        return data;
+    } catch (e) {
+        log.error(e);
+
+        return null;
     }
-
-    const folderFiles = fs.readdirSync(path);
-    const hasLauncherSettings = folderFiles.some((e) => 'launcher-settings.json' === e);
-    const hasGameExe = folderFiles.some((e) => getExecutableName() === e);
-
-    return hasLauncherSettings && hasGameExe;
 }
 
-// This is just to make sure
-function isValidHoi4ExecutablePath(path) {
-    dirPath = path.basename(path.dirname(path));
-    exeName = getExecutableName(path.split('\\').at(-1));
+async function writePdxSettings(settings) {
+    let template = await fsPromises.readFile(path.join(__dirname, 'templates', 'pdx_settings_template.txt'), 'utf-8');
 
-    return isValidHoi4Folder(dirPath) && Boolean(exeName);
+    template = template.replace(/{DISPLAY_INDEX_VALUE}/gm, settings.Graphics.display_index.value ?? '0');
+    template = template.replace(/{DISPLAY_INDEX_VERSION}/gm, settings.Graphics.display_index.version ?? '0');
+    template = template.replace(/{DISPLAY_MODE_VALUE}/gm, settings.Graphics.display_mode.value ?? 'fullscreen');
+    template = template.replace(/{DISPLAY_MODE_VERSION}/gm, settings.Graphics.display_mode.version ?? '0');
+    template = template.replace(
+        /{FULLSCREEN_RESOLUTION_VALUE}/gm,
+        settings.Graphics.fullscreen_resolution.value ?? '1920x1080'
+    );
+    template = template.replace(/{FULLSCREEN_RESOLUTION_VERSION}/gm, settings.Graphics.fullscreen_resolution.version);
+    template = template.replace(/{VSYNC_ENABLED}/gm, settings.Graphics.vsync.enabled ? 'yes' : 'no');
+    template = template.replace(/{VSYNC_VERSION}/gm, settings.Graphics.vsync.version ?? '0');
+    template = template.replace(/{REFRESH_RATE_VALUE}/gm, settings.Graphics.refreshRate.value ?? '60');
+    template = template.replace(/{REFRESH_RATE_VERSION}/gm, settings.Graphics.refreshRate.version ?? '0');
+    template = template.replace(
+        /{WINDOWED_RESOLUTION_VALUE}/gm,
+        settings.Graphics.windowed_resolution.value ?? '1920x1080'
+    );
+    template = template.replace(
+        /{WINDOWED_RESOLUTION_VERSION}/gm,
+        settings.Graphics.windowed_resolution.version ?? '0'
+    );
+    template = template.replace(/{RENDERER_VALUE}/gm, settings.Graphics.renderer.value ?? 'dx9');
+    template = template.replace(/{RENDERER_VERSION}/gm, settings.Graphics.renderer.version ?? '0');
+    template = template.replace(/{LANGUAGE_VALUE}/gm, settings.System.language.value ?? 'l_english');
+    template = template.replace(/{LANGUAGE_VERSION}/gm, settings.System.language.version ?? '0');
+
+    await fsPromises.writeFile(path.join(paths.gameDataPath, 'pdx_settings.txt'), template);
+
+    gameSettings = parsePdxSettings(template);
+}
+
+async function updateScreensList() {
+    return await ipcRenderer.invoke('getAllDisplays');
+}
+
+async function readGameData() {
+    if (!isValidHoi4Folder(paths.gameDirPath)) {
+        const warnMessage = paths.gameDirPath
+            ? `Invalid HOI4 folder path : ${paths.gameDirPath}`
+            : 'Missing HOI4 folder path';
+
+        log.warn(warnMessage);
+
+        return;
+    }
+
+    paths.settingsFilePath = path.join(paths.gameDirPath, 'launcher-settings.json');
+
+    try {
+        const launcherSettingsContent = await fsPromises.readFile(paths.settingsFilePath, 'utf-8');
+        const launcherSettings = JSON.parse(launcherSettingsContent);
+
+        paths.gameDataPath = await ipcRenderer.invoke('userDocumentsPath');
+        paths.gameDataPath = path.join(paths.gameDataPath, 'Paradox Interactive', 'Hearts of Iron IV');
+
+        let exeName = launcherSettings.exePath;
+
+        if (!exeName) {
+            log.warn('Exe path not found in launcher-settings.json. Using fallback path...');
+
+            exeName = getExecutableName();
+        }
+
+        paths.exePath = path.join(paths.gameDirPath, exeName);
+
+        let pdxSettingsContent = '';
+
+        try {
+            pdxSettingsContent = await fsPromises.readFile(path.join(paths.gameDataPath, 'pdx_settings.txt'), 'utf-8');
+        } catch (e) {
+            log.error(e);
+
+            gameSettings = null;
+
+            gameDataInitialized = true;
+            log.warn('File pdx_settings.txt not found, settings will be default.');
+            log.info('Game data loaded.');
+
+            return;
+        }
+
+        gameSettings = parsePdxSettings(pdxSettingsContent);
+
+        gameDataInitialized = true;
+        log.info('Game data loaded.');
+    } catch (e) {
+        log.error(e);
+
+        throw e;
+    }
+}
+
+async function init() {
+    try {
+        allScreens = await updateScreensList();
+        appLocale = await ipcRenderer.invoke('getAppLocale');
+        appName = await ipcRenderer.invoke('appName');
+        paths.appDataPath = await ipcRenderer.invoke('appDataPath');
+        paths.appDataPath = path.join(paths.appDataPath, appName);
+        isDev = await ipcRenderer.invoke('isDev');
+        paths.logsDirPath = path.join(paths.appDataPath, 'logs');
+
+        await readGameData();
+
+        // Create log folder if it doesn't exist
+        if (!fs.existsSync(paths.logsDirPath)) {
+            fs.mkdirSync(paths.logsDirPath, { recursive: true });
+        }
+
+        apiInitialized = true;
+        log.info('Renderer API initialized.');
+    } catch (e) {
+        log.error(e);
+
+        throw e;
+    }
 }
 
 contextBridge.exposeInMainWorld('api', {
     init: async () => await init(),
-    launchHoi4: (executablePath, parameters) => {
-        if (!isValidHoi4ExecutablePath(executablePath)) {
-            throw new Error('Invalid HOI4 path.');
+    readGameData: async () => await readGameData(),
+    launchHoi4: (parameters) => {
+        denyIfApiNotInitialized();
+
+        if (!isValidHoi4ExecutablePath(paths.exePath)) {
+            throwAndLogError(`Invalid HOI4 path : ${paths.exePath}`);
         }
 
-        const child = require('child_process').execFile;
+        const child = require('child_process');
 
-        child(executablePath, parameters, (err) => {
-            if (err) {
-                throw err;
-            }
+        hoi4Process = child.spawn(paths.exePath, parameters, { detached: true });
+
+        hoi4Process.on('spawn', () => {
+            ipcRenderer.send('close-app');
         });
     },
-    getHoi4Path: () => getGamePath(HOI4_APP_ID),
-    getHoi4ExecutablePath: () => {
-        const dirPath = getGamePath(HOI4_APP_ID)?.game?.path;
-        const executableName = getExecutableName();
+    getHoi4Path: () => {
+        denyIfApiNotInitialized();
 
-        if (!dirPath) {
-            return null;
-        }
-
-        return executableName ? path.join(dirPath, executableName) : null;
+        return paths.gameDirPath;
     },
-    getAppLocale: () => appLocale,
+    getHoi4ExecutablePath: () => {
+        denyIfApiNotInitialized();
+
+        return paths.exePath;
+    },
+    getAppLocale: () => {
+        denyIfApiNotInitialized();
+
+        return appLocale;
+    },
+    getAppName: () => {
+        denyIfApiNotInitialized();
+
+        return appName;
+    },
+    isDev: () => {
+        denyIfApiNotInitialized();
+
+        return isDev;
+    },
     getTranslationFiles: () => {
         return fs
             .readdirSync(path.join(__dirname, 'renderer', 'src', 'translations'))
             .filter((fileName) => /^[a-z_\-]+.json$/.test(fileName));
     },
-    getAllDisplayScreens: () => allScreens,
+    getAllDisplayScreens: () => {
+        denyIfApiNotInitialized();
+
+        return allScreens;
+    },
     updateScreensList: async () => {
         allScreens = await updateScreensList();
 
@@ -114,14 +286,17 @@ contextBridge.exposeInMainWorld('api', {
     },
     folderPathInput: async () => await ipcRenderer.invoke('openDirectoryDialog'),
     isValidHoi4Folder: (path) => isValidHoi4Folder(path),
-    isValidHoi4Folder: (path) => isValidHoi4Folder(path),
-    closeApp: () => {
-        ipcRenderer.send('close-app');
+    isValidHoi4ExecutablePath: (path) => isValidHoi4ExecutablePath(path),
+    closeApp: () => ipcRenderer.send('close-app'),
+    getAppDataPath: () => paths.appDataPath,
+    logs: () => log.functions,
+    openLogsFolder: async () => await ipcRenderer.invoke('openFolder', paths.logsDirPath),
+    getGameSettings: () => {
+        denyIfGameDataNotInitialized();
+
+        return gameSettings;
     },
-    getAppDataPath: () => appDataPath,
-    getAppName: () => appName,
-    isDev: () => isDev,
-    logs: () => log.functions
+    setGameSettings: async (settings) => await writePdxSettings(settings)
 });
 
 log.info('Renderer ready.');
