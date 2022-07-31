@@ -37,6 +37,7 @@
     "svelte-check": "^2.2.7",
     "svelte-dialogs": "^1.2.2",
     "svelte-i18n": "^3.4.0",
+    "svelte-loading-spinners": "^0.1.7",
     "svelte-notifications": "^0.9.95",
     "svelte-preprocess": "^4.9.8",
     "tslib": "^2.3.1",
@@ -50,6 +51,8 @@
   },
   "dependencies": {
     "electron-log": "^4.4.8",
+    "electron-store": "^8.0.2",
+    "electron-unhandled": "^4.0.1",
     "json-fixer": "^1.6.13",
     "steam-game-path": "^2.2.0"
   }

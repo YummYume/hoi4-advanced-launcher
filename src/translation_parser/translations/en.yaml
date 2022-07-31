@@ -44,6 +44,7 @@ argument.description.autosave_count: Must be a number.
 # Launcher settings
 settings.launcher: Launcher settings
 settings.game_folder: Game folder
+settings.game_folder.auto_find: Auto search
 settings.language: Language
 
 # Game settings
@@ -55,6 +56,7 @@ settings.display_mode.borderless_fullscreen: Borderless fullscreen
 settings.display_mode.windowed: Windowed
 settings.monitor: Display monitor
 settings.monitor.description: The display used for the game.
+settings.monitor.refresh_list: Refresh monitor list
 settings.vsync.description: Enable VSync
 settings.refresh_rate: Refresh rate
 settings.refresh_rate.description: The refresh rate of the current display.
@@ -85,6 +87,7 @@ notification.displays_refreshed.error: Something went wrong while refreshing the
 notification.select_hoi4_folder_path.invalid: The path given does not look right. Please try again.
 notification.select_hoi4_folder_path.success: Path successfully changed.
 notification.select_hoi4_folder_path.error: Something went wrong while changing the path.
+notification.select_hoi4_folder_path.not_found: Could not find a valid HOI4 folder.
 
 # Save settings
 notification.save_settings_status.error: Something went wrong while saving the settings.
@@ -94,6 +97,9 @@ notification.save_settings_status.error: Something went wrong while saving the s
 dialog.confirm_hoi4_path.title: Path confirmation
 dialog.confirm_hoi4_path.description: >
   The path given looks right.
+  Before confirming, ensure this is the right path to your HOI4 game folder, as an invalid path could cause issues.
+dialog.confirm_hoi4_path.description_auto: >
+  A valid path to your HOI4 game folder has been found.
   Before confirming, ensure this is the right path to your HOI4 game folder, as an invalid path could cause issues.
 
 # Parameter argument

@@ -46,6 +46,7 @@ argument.description.autosave_count: Doit être un nombre.
 # Launcher settings
 settings.launcher: Paramètres du launcher
 settings.game_folder: Dossier du jeu
+settings.game_folder.auto_find: Recherche automatique
 settings.language: Langue
 
 # Game settings
@@ -57,6 +58,7 @@ settings.display_mode.borderless_fullscreen: Plein écran sans bordure
 settings.display_mode.windowed: Fenêtré
 settings.monitor: Moniteur
 settings.monitor.description: Le moniteur utilisé pour le jeu.
+settings.monitor.refresh_list: Actualiser la liste des moniteurs
 settings.vsync.description: Activer la VSync
 settings.refresh_rate: Fréquence de rafraîchissement
 settings.refresh_rate.description: La fréquence de rafraîchissement du moniteur actuel.
@@ -74,6 +76,7 @@ settings.options: Options
 settings.options.open_logs: Ouvrir le dossier des logs
 
 ### Notifications
+# Launch error
 notification.launch_error: Une erreur est survenue lors du lancement du jeu.
 notification.invalid_hoi4_executable_path: >
   Votre chemin d'exécutable pour HOI4 semble erroné. Cela est probablement dû à un chemin du dossier de jeu invalide dans vos paramètres.
@@ -86,6 +89,7 @@ notification.displays_refreshed.error: Une erreur s'est produite lors de l'actua
 notification.select_hoi4_folder_path.invalid: Le chemin indiqué ne semble pas correct. Veuillez réessayer.
 notification.select_hoi4_folder_path.success: Le chemin a été modifié avec succès.
 notification.select_hoi4_folder_path.error: Une erreur s'est produite lors de la modification du chemin.
+notification.select_hoi4_folder_path.not_found: Impossible de trouver un dossier HOI4 valide.
 
 # Save settings
 notification.save_settings_status.error: Une erreur s'est produite lors de l'enregistrement des paramètres.
@@ -95,6 +99,9 @@ notification.save_settings_status.error: Une erreur s'est produite lors de l'enr
 dialog.confirm_hoi4_path.title: Validation du chemin
 dialog.confirm_hoi4_path.description: >
   Le chemin indiqué semble correct.
+  Avant de confirmer, assurez-vous qu'il s'agit du bon chemin vers votre dossier de jeu HOI4, car un chemin invalide pourrait causer des problèmes.
+dialog.confirm_hoi4_path.description_auto: >
+  Un chemin valide vers votre dossier de jeu HOI4 a été trouvé.
   Avant de confirmer, assurez-vous qu'il s'agit du bon chemin vers votre dossier de jeu HOI4, car un chemin invalide pourrait causer des problèmes.
 
 # Parameter argument

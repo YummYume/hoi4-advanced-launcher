@@ -3,11 +3,7 @@ import { register, init } from 'svelte-i18n';
 
 import { supportedLanguages } from './lib/data/languages';
 
-try {
-    await api.init();
-} catch (e) {
-    api.logs().error(e);
-}
+await api.init();
 
 const appLocale = api.getAppLocale();
 

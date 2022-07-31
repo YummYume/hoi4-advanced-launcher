@@ -1,3 +1,5 @@
+import type { PdxGameSettings } from "../stores/gameSettings";
+
 export const supportedGameDisplayModes: GameDisplayMode[] = [
     { label: 'fullscreen', value: 'fullscreen' },
     { label: 'borderless_fullscreen', value: 'borderless_fullscreen' },
@@ -43,6 +45,45 @@ export const supportedScreenResolutions: ScreenResolution[] = [
     { label: '960x640', value: '960x640' },
     { label: '640x480', value: '640x480' }
 ];
+
+export const defaultSettings: PdxGameSettings = {
+    Graphics: {
+        display_index: {
+            value: '0',
+            version: '0'
+        },
+        display_mode: {
+            value: 'fullscreen',
+            version: '0'
+        },
+        fullscreen_resolution: {
+            value: '1920x1080',
+            version: '0'
+        },
+        vsync: {
+            enabled: false,
+            version: '0'
+        },
+        refreshRate: {
+            value: '60',
+            version: '0'
+        },
+        windowed_resolution: {
+            value: '1920x1080',
+            version: '0'
+        },
+        renderer: {
+            value: 'dx9',
+            version: '0'
+        }
+    },
+    System: {
+        language: {
+            value: 'l_english',
+            version: '0'
+        }
+    }
+};
 
 export interface GameDisplayMode {
     label: string;

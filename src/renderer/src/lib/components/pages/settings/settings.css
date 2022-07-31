@@ -1,0 +1,21 @@
+.folder-select-container {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+
+.section-title {
+    margin-bottom: 10px;
+}
+
+.title {
+    font-size: 2rem;
+}
+
+.section {
+    margin: 5px 10px;
+}
+
+.form-field {
+    margin: 20px 0;
+}

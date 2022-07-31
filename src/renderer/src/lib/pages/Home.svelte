@@ -6,12 +6,11 @@
     import { fade } from 'svelte/transition';
     import { _ } from 'svelte-i18n';
 
-    import { launchParameters } from '../stores/launchParameters';
-    import Parameters from '../components/Parameters.svelte';
+    import { launchParameters, launchParametersStrictMode } from '../stores/launchParameters';
+    import Parameters from '../components/pages/home/Parameters.svelte';
 
     const { addNotification, removeNotification } = getNotificationsContext();
 
-    let strictMode = true;
     let parametersPanelOpened = false;
     let parameterErrorMessage = null;
 
@@ -48,7 +47,11 @@
 
 <section in:fade class="container">
     <div class="top-row">
-        <Button variant="outlined" on:click={launchHoi4} disabled={Boolean(strictMode && parameterErrorMessage)}>
+        <Button
+            variant="outlined"
+            on:click={launchHoi4}
+            disabled={Boolean($launchParametersStrictMode && parameterErrorMessage)}
+        >
             <ButtonLabel>{$_('home.launch_hoi4')}</ButtonLabel>
         </Button>
     </div>
@@ -64,7 +67,11 @@
                     </IconButton>
                 </Header>
                 <AccordionContent>
-                    <Parameters bind:strictMode bind:parameterErrorMessage bind:launchParameters={$launchParameters} />
+                    <Parameters
+                        bind:strictMode={$launchParametersStrictMode}
+                        bind:launchParameters={$launchParameters}
+                        bind:parameterErrorMessage
+                    />
                 </AccordionContent>
             </Panel>
         </Accordion>

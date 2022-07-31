@@ -9,8 +9,8 @@
     import { getNotificationsContext } from 'svelte-notifications';
     import { _ } from 'svelte-i18n';
 
-    import { Parameter, parameters } from '../data/parameters';
-    import ParameterArgumentDialog from './ParameterArgumentDialog.svelte';
+    import { Parameter, parameters } from '../../../data/parameters';
+    import ParameterArgumentDialog from '../../ParameterArgumentDialog.svelte';
 
     export let strictMode = true;
     export let parameterErrorMessage = null;

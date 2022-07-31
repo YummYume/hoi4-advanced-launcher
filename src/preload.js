@@ -5,6 +5,13 @@ const fs = require('fs');
 const fsPromises = require('fs/promises');
 const log = require('electron-log');
 const jsonFix = require('json-fixer');
+const unhandled = require('electron-unhandled');
+
+unhandled({
+    logger: log.error,
+    showDialog: true,
+    reportButton: (error) => ipcRenderer.invoke('unhandledReportButton', error)
+});
 
 const HOI4_APP_ID = 394360;
 const paths = {
@@ -12,7 +19,7 @@ const paths = {
     appDataPath: '',
     gameDataPath: '',
     logsDirPath: '',
-    gameDirPath: getGamePath(HOI4_APP_ID)?.game?.path,
+    gameDirPath: '',
     settingsFilePath: ''
 };
 
@@ -23,11 +30,11 @@ let appLocale = 'en';
 let appName = 'HOI4 Advanced Launcher';
 let isDev = false;
 let gameSettings = null;
+let launchParameters = '';
+let launchParametersStrictMode = true;
 
 function throwAndLogError(errorMessage) {
-    log.error(errorMessage);
-
-    throw new Error(errorMessage);
+    unhandled.logError(new Error(errorMessage));
 }
 
 function denyIfApiNotInitialized() {
@@ -46,7 +53,7 @@ function isValidHoi4Folder(pathName) {
     pathName = pathName ?? '';
 
     if (!fs.existsSync(pathName)) {
-        throwAndLogError('Invalid HOI4 folder path.');
+        log.error('Invalid HOI4 folder path.');
     }
 
     const folderFiles = fs.readdirSync(pathName);
@@ -99,44 +106,52 @@ function parsePdxSettings(settings) {
 
         return data;
     } catch (e) {
-        log.error(e);
-
-        return null;
+        unhandled.logError(e);
     }
 }
 
 async function writePdxSettings(settings) {
-    let template = await fsPromises.readFile(path.join(__dirname, 'templates', 'pdx_settings_template.txt'), 'utf-8');
+    try {
+        let template = await fsPromises.readFile(
+            path.join(__dirname, 'templates', 'pdx_settings_template.txt'),
+            'utf-8'
+        );
 
-    template = template.replace(/{DISPLAY_INDEX_VALUE}/gm, settings.Graphics.display_index.value ?? '0');
-    template = template.replace(/{DISPLAY_INDEX_VERSION}/gm, settings.Graphics.display_index.version ?? '0');
-    template = template.replace(/{DISPLAY_MODE_VALUE}/gm, settings.Graphics.display_mode.value ?? 'fullscreen');
-    template = template.replace(/{DISPLAY_MODE_VERSION}/gm, settings.Graphics.display_mode.version ?? '0');
-    template = template.replace(
-        /{FULLSCREEN_RESOLUTION_VALUE}/gm,
-        settings.Graphics.fullscreen_resolution.value ?? '1920x1080'
-    );
-    template = template.replace(/{FULLSCREEN_RESOLUTION_VERSION}/gm, settings.Graphics.fullscreen_resolution.version);
-    template = template.replace(/{VSYNC_ENABLED}/gm, settings.Graphics.vsync.enabled ? 'yes' : 'no');
-    template = template.replace(/{VSYNC_VERSION}/gm, settings.Graphics.vsync.version ?? '0');
-    template = template.replace(/{REFRESH_RATE_VALUE}/gm, settings.Graphics.refreshRate.value ?? '60');
-    template = template.replace(/{REFRESH_RATE_VERSION}/gm, settings.Graphics.refreshRate.version ?? '0');
-    template = template.replace(
-        /{WINDOWED_RESOLUTION_VALUE}/gm,
-        settings.Graphics.windowed_resolution.value ?? '1920x1080'
-    );
-    template = template.replace(
-        /{WINDOWED_RESOLUTION_VERSION}/gm,
-        settings.Graphics.windowed_resolution.version ?? '0'
-    );
-    template = template.replace(/{RENDERER_VALUE}/gm, settings.Graphics.renderer.value ?? 'dx9');
-    template = template.replace(/{RENDERER_VERSION}/gm, settings.Graphics.renderer.version ?? '0');
-    template = template.replace(/{LANGUAGE_VALUE}/gm, settings.System.language.value ?? 'l_english');
-    template = template.replace(/{LANGUAGE_VERSION}/gm, settings.System.language.version ?? '0');
+        template = template.replace(/{DISPLAY_INDEX_VALUE}/gm, settings.Graphics.display_index.value ?? '0');
+        template = template.replace(/{DISPLAY_INDEX_VERSION}/gm, settings.Graphics.display_index.version ?? '0');
+        template = template.replace(/{DISPLAY_MODE_VALUE}/gm, settings.Graphics.display_mode.value ?? 'fullscreen');
+        template = template.replace(/{DISPLAY_MODE_VERSION}/gm, settings.Graphics.display_mode.version ?? '0');
+        template = template.replace(
+            /{FULLSCREEN_RESOLUTION_VALUE}/gm,
+            settings.Graphics.fullscreen_resolution.value ?? '1920x1080'
+        );
+        template = template.replace(
+            /{FULLSCREEN_RESOLUTION_VERSION}/gm,
+            settings.Graphics.fullscreen_resolution.version
+        );
+        template = template.replace(/{VSYNC_ENABLED}/gm, settings.Graphics.vsync.enabled ? 'yes' : 'no');
+        template = template.replace(/{VSYNC_VERSION}/gm, settings.Graphics.vsync.version ?? '0');
+        template = template.replace(/{REFRESH_RATE_VALUE}/gm, settings.Graphics.refreshRate.value ?? '60');
+        template = template.replace(/{REFRESH_RATE_VERSION}/gm, settings.Graphics.refreshRate.version ?? '0');
+        template = template.replace(
+            /{WINDOWED_RESOLUTION_VALUE}/gm,
+            settings.Graphics.windowed_resolution.value ?? '1920x1080'
+        );
+        template = template.replace(
+            /{WINDOWED_RESOLUTION_VERSION}/gm,
+            settings.Graphics.windowed_resolution.version ?? '0'
+        );
+        template = template.replace(/{RENDERER_VALUE}/gm, settings.Graphics.renderer.value ?? 'dx9');
+        template = template.replace(/{RENDERER_VERSION}/gm, settings.Graphics.renderer.version ?? '0');
+        template = template.replace(/{LANGUAGE_VALUE}/gm, settings.System.language.value ?? 'l_english');
+        template = template.replace(/{LANGUAGE_VERSION}/gm, settings.System.language.version ?? '0');
 
-    await fsPromises.writeFile(path.join(paths.gameDataPath, 'pdx_settings.txt'), template);
+        await fsPromises.writeFile(path.join(paths.gameDataPath, 'pdx_settings.txt'), template);
 
-    gameSettings = parsePdxSettings(template);
+        gameSettings = parsePdxSettings(template);
+    } catch (e) {
+        unhandled.logError(e);
+    }
 }
 
 async function updateScreensList() {
@@ -154,16 +169,20 @@ async function readGameData() {
         return;
     }
 
-    paths.settingsFilePath = path.join(paths.gameDirPath, 'launcher-settings.json');
-
     try {
-        const launcherSettingsContent = await fsPromises.readFile(paths.settingsFilePath, 'utf-8');
-        const launcherSettings = JSON.parse(launcherSettingsContent);
+        let exeName;
+
+        paths.settingsFilePath = path.join(paths.gameDirPath, 'launcher-settings.json');
+
+        if (fs.existsSync(paths.settingsFilePath)) {
+            const launcherSettingsContent = await fsPromises.readFile(paths.settingsFilePath, 'utf-8');
+            const launcherSettings = JSON.parse(launcherSettingsContent);
+
+            exeName = launcherSettings.exePath;
+        }
 
         paths.gameDataPath = await ipcRenderer.invoke('userDocumentsPath');
         paths.gameDataPath = path.join(paths.gameDataPath, 'Paradox Interactive', 'Hearts of Iron IV');
-
-        let exeName = launcherSettings.exePath;
 
         if (!exeName) {
             log.warn('Exe path not found in launcher-settings.json. Using fallback path...');
@@ -177,37 +196,34 @@ async function readGameData() {
 
         try {
             pdxSettingsContent = await fsPromises.readFile(path.join(paths.gameDataPath, 'pdx_settings.txt'), 'utf-8');
-        } catch (e) {
-            log.error(e);
 
+            gameSettings = parsePdxSettings(pdxSettingsContent);
+        } catch (e) {
             gameSettings = null;
 
-            gameDataInitialized = true;
-            log.warn('File pdx_settings.txt not found, settings will be default.');
-            log.info('Game data loaded.');
-
-            return;
+            log.error(e);
+            log.warn('File pdx_settings.txt not found or impossible to parse settings... Settings will be default.');
         }
-
-        gameSettings = parsePdxSettings(pdxSettingsContent);
 
         gameDataInitialized = true;
         log.info('Game data loaded.');
     } catch (e) {
-        log.error(e);
-
-        throw e;
+        unhandled.logError(e);
     }
 }
 
 async function init() {
     try {
+        isDev = await ipcRenderer.invoke('isDev');
         allScreens = await updateScreensList();
-        appLocale = await ipcRenderer.invoke('getAppLocale');
+        appLocale = (await ipcRenderer.invoke('getStoreValue', 'locale')) ?? (await ipcRenderer.invoke('getAppLocale'));
         appName = await ipcRenderer.invoke('appName');
+        launchParameters = await ipcRenderer.invoke('getStoreValue', 'launchParameters');
+        launchParametersStrictMode = await ipcRenderer.invoke('getStoreValue', 'launchParametersStrictMode');
         paths.appDataPath = await ipcRenderer.invoke('appDataPath');
         paths.appDataPath = path.join(paths.appDataPath, appName);
-        isDev = await ipcRenderer.invoke('isDev');
+        paths.gameDirPath =
+            (await ipcRenderer.invoke('getStoreValue', 'hoi4DirPath')) ?? getGamePath(HOI4_APP_ID)?.game?.path;
         paths.logsDirPath = path.join(paths.appDataPath, 'logs');
 
         await readGameData();
@@ -220,15 +236,24 @@ async function init() {
         apiInitialized = true;
         log.info('Renderer API initialized.');
     } catch (e) {
-        log.error(e);
-
-        throw e;
+        unhandled.logError(e);
     }
 }
 
 contextBridge.exposeInMainWorld('api', {
     init: async () => await init(),
     readGameData: async () => await readGameData(),
+    folderPathInput: async () => await ipcRenderer.invoke('openDirectoryDialog'),
+    isValidHoi4Folder: (path) => isValidHoi4Folder(path),
+    isValidHoi4ExecutablePath: (path) => isValidHoi4ExecutablePath(path),
+    closeApp: () => ipcRenderer.send('close-app'),
+    logs: () => log.functions,
+    openLogsFolder: async () => await ipcRenderer.invoke('openFolder', paths.logsDirPath),
+    getTranslationFiles: () => {
+        return fs
+            .readdirSync(path.join(__dirname, 'renderer', 'src', 'translations'))
+            .filter((fileName) => /^[a-z_\-]+.json$/.test(fileName));
+    },
     launchHoi4: (parameters) => {
         denyIfApiNotInitialized();
 
@@ -269,11 +294,6 @@ contextBridge.exposeInMainWorld('api', {
 
         return isDev;
     },
-    getTranslationFiles: () => {
-        return fs
-            .readdirSync(path.join(__dirname, 'renderer', 'src', 'translations'))
-            .filter((fileName) => /^[a-z_\-]+.json$/.test(fileName));
-    },
     getAllDisplayScreens: () => {
         denyIfApiNotInitialized();
 
@@ -284,19 +304,44 @@ contextBridge.exposeInMainWorld('api', {
 
         return allScreens;
     },
-    folderPathInput: async () => await ipcRenderer.invoke('openDirectoryDialog'),
-    isValidHoi4Folder: (path) => isValidHoi4Folder(path),
-    isValidHoi4ExecutablePath: (path) => isValidHoi4ExecutablePath(path),
-    closeApp: () => ipcRenderer.send('close-app'),
-    getAppDataPath: () => paths.appDataPath,
-    logs: () => log.functions,
-    openLogsFolder: async () => await ipcRenderer.invoke('openFolder', paths.logsDirPath),
+    getAppDataPath: () => {
+        denyIfApiNotInitialized();
+
+        return paths.appDataPath;
+    },
     getGameSettings: () => {
         denyIfGameDataNotInitialized();
 
         return gameSettings;
     },
-    setGameSettings: async (settings) => await writePdxSettings(settings)
+    setGameSettings: async (settings) => await writePdxSettings(settings),
+    setHoi4DirPath: async (path) => {
+        paths.gameDirPath = path;
+        await ipcRenderer.invoke('setStoreValue', 'hoi4DirPath', path);
+    },
+    findHoi4DirPath: () => getGamePath(HOI4_APP_ID)?.game?.path,
+    setLocale: async (locale) => {
+        appLocale = locale;
+        await ipcRenderer.invoke('setStoreValue', 'locale', locale);
+    },
+    setLaunchParameters: async (parameters) => {
+        launchParameters = parameters;
+        await ipcRenderer.invoke('setStoreValue', 'launchParameters', parameters);
+    },
+    getLaunchParameters: () => {
+        denyIfApiNotInitialized();
+
+        return launchParameters;
+    },
+    setLaunchParametersStrictMode: async (strictMode) => {
+        launchParametersStrictMode = strictMode;
+        await ipcRenderer.invoke('setStoreValue', 'launchParametersStrictMode', strictMode);
+    },
+    getLaunchParametersStrictMode: () => {
+        denyIfApiNotInitialized();
+
+        return launchParametersStrictMode;
+    }
 });
 
 log.info('Renderer ready.');

@@ -7,12 +7,13 @@
     const { titleId } = getOptions();
 
     export let path: string;
+    export let auto: boolean;
 </script>
 
 <DialogContent>
     <h1 id={titleId} slot="header">{$_('dialog.confirm_hoi4_path.title')}</h1>
     <svelte:fragment slot="body">
-        <p>{$_('dialog.confirm_hoi4_path.description')}</p>
+        <p>{$_(auto ? 'dialog.confirm_hoi4_path.description_auto' : 'dialog.confirm_hoi4_path.description')}</p>
         <div class="path-content">
             <pre>{path}</pre>
         </div>
