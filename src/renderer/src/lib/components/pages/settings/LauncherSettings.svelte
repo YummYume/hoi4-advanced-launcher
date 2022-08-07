@@ -12,6 +12,7 @@
     import SectionTitleUnderline from '../../../components/SectionTitleUnderline.svelte';
     import { supportedLanguages } from '../../../data/languages';
     import ConfirmHoi4Path from '../../../components/ConfirmHoi4Path.svelte';
+    import { loading } from '../../../stores/loading';
 
     const { addNotification, removeNotification } = getNotificationsContext();
 
@@ -36,8 +37,14 @@
 
             if (confirm) {
                 try {
-                    api.setHoi4DirPath(path);
-                    api.logs().info(`Folder path changed to : ${path}`);
+                    $loading = true;
+
+                    await api.setHoi4DirPath(path);
+                    steamPath = api.getHoi4Path();
+
+                    $loading = false;
+
+                    api.logs().info(`HOI4 dir path changed to : ${path}`);
 
                     addNotification({
                         id: 'hoi4-select-path-status',
@@ -47,6 +54,7 @@
                         type: 'success'
                     });
                 } catch (e) {
+                    $loading = false;
                     api.logs().error('Error while changing HOI4 dir path.');
 
                     addNotification({

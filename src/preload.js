@@ -56,11 +56,36 @@ function isValidHoi4Folder(pathName) {
         log.error('Invalid HOI4 folder path.');
     }
 
+    const gameFolders = [
+        'browser',
+        'cef',
+        'common',
+        'country_metadata',
+        'dlc',
+        'dlc_metadata',
+        'events',
+        'Firefox',
+        'gfx',
+        'history',
+        'interface',
+        'localisation',
+        'map',
+        'music',
+        'pdx_browser',
+        'portraits',
+        'previewer_assets',
+        'script',
+        'sound',
+        'soundtrack',
+        'tutorial',
+        'tweakergui_assets',
+        'wiki'
+    ];
     const folderFiles = fs.readdirSync(pathName);
-    const hasLauncherSettings = folderFiles.some((e) => 'launcher-settings.json' === e);
+    const hasGameFolders = gameFolders.every((f) => folderFiles.some((e) => f === e));
     const hasGameExe = folderFiles.some((e) => (getExecutableName() ? getExecutableName() === e : false));
 
-    return hasLauncherSettings && hasGameExe;
+    return hasGameFolders && hasGameExe;
 }
 
 function isValidHoi4ExecutablePath(pathName) {
@@ -158,7 +183,7 @@ async function updateScreensList() {
     return await ipcRenderer.invoke('getAllDisplays');
 }
 
-async function readGameData() {
+async function readGameExePath() {
     if (!isValidHoi4Folder(paths.gameDirPath)) {
         const warnMessage = paths.gameDirPath
             ? `Invalid HOI4 folder path : ${paths.gameDirPath}`
@@ -181,9 +206,6 @@ async function readGameData() {
             exeName = launcherSettings.exePath;
         }
 
-        paths.gameDataPath = await ipcRenderer.invoke('userDocumentsPath');
-        paths.gameDataPath = path.join(paths.gameDataPath, 'Paradox Interactive', 'Hearts of Iron IV');
-
         if (!exeName) {
             log.warn('Exe path not found in launcher-settings.json. Using fallback path...');
 
@@ -191,8 +213,17 @@ async function readGameData() {
         }
 
         paths.exePath = path.join(paths.gameDirPath, exeName);
+    } catch (e) {
+        unhandled.logError(e);
+    }
+}
 
+async function readGameSettingsData() {
+    try {
         let pdxSettingsContent = '';
+
+        paths.gameDataPath = await ipcRenderer.invoke('userDocumentsPath');
+        paths.gameDataPath = path.join(paths.gameDataPath, 'Paradox Interactive', 'Hearts of Iron IV');
 
         try {
             pdxSettingsContent = await fsPromises.readFile(path.join(paths.gameDataPath, 'pdx_settings.txt'), 'utf-8');
@@ -204,6 +235,15 @@ async function readGameData() {
             log.error(e);
             log.warn('File pdx_settings.txt not found or impossible to parse settings... Settings will be default.');
         }
+    } catch (e) {
+        unhandled.logError(e);
+    }
+}
+
+async function readGameData() {
+    try {
+        await readGameExePath();
+        await readGameSettingsData();
 
         gameDataInitialized = true;
         log.info('Game data loaded.');
@@ -317,6 +357,8 @@ contextBridge.exposeInMainWorld('api', {
     setGameSettings: async (settings) => await writePdxSettings(settings),
     setHoi4DirPath: async (path) => {
         paths.gameDirPath = path;
+
+        await readGameExePath();
         await ipcRenderer.invoke('setStoreValue', 'hoi4DirPath', path);
     },
     findHoi4DirPath: () => getGamePath(HOI4_APP_ID)?.game?.path,

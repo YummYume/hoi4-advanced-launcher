@@ -5,9 +5,11 @@
     import { isLoading, _, locale } from 'svelte-i18n';
     import { onMount } from 'svelte';
     import { Circle2 } from 'svelte-loading-spinners';
+    import { fade } from 'svelte/transition';
 
     import { tabs } from './lib/data/tabs';
     import { currentTab } from './lib/stores/currentTab';
+    import { loading } from './lib/stores/loading';
     import { displayScreens } from './lib/stores/displayScreens';
     import { gameSettings } from './lib/stores/gameSettings';
     import { launchParameters, launchParametersStrictMode } from './lib/stores/launchParameters';
@@ -20,6 +22,7 @@
     $: handleLocaleChange($locale);
     $: handleLaunchParametersChange($launchParameters);
     $: handleLaunchParametersStrictModeChange($launchParametersStrictMode);
+    $: appLoading = $isLoading || $loading;
 
     async function handleLocaleChange(newLocale?: string) {
         if (newLocale) {
@@ -41,25 +44,23 @@
         }
     }
 
-    async function handleLaunchParametersStrictModeChange(newMode?: boolean) {
-        if (newMode) {
-            try {
-                await api.setLaunchParametersStrictMode(newMode);
-            } catch (e) {
-                api.logs().error(e);
-            }
+    async function handleLaunchParametersStrictModeChange(newMode: boolean) {
+        try {
+            await api.setLaunchParametersStrictMode(newMode);
+        } catch (e) {
+            api.logs().error(e);
         }
     }
 </script>
 
-{#if $isLoading}
-    <div class="loading-overlay">
+{#if appLoading}
+    <div class="loading-overlay" transition:fade={{ delay: 500, duration: 500 }}>
         <Circle2 size="100" unit="px" />
     </div>
 {/if}
 <header>
-    <TabBar {tabs} let:tab bind:active={$currentTab}>
-        <Tab {tab}>
+    <TabBar {tabs} disabled={appLoading} let:tab bind:active={$currentTab}>
+        <Tab {tab} disabled={appLoading}>
             <Label>{$_(`menu.${tab.key}`)}</Label>
         </Tab>
     </TabBar>
