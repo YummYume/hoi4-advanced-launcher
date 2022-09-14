@@ -7,11 +7,11 @@
     import { _ } from 'svelte-i18n';
 
     import { launchParameters, launchParametersStrictMode } from '../stores/launchParameters';
+    import { launchParametersOpened } from '../stores/launchParametersOpened';
     import Parameters from '../components/pages/home/Parameters.svelte';
 
     const { addNotification, removeNotification } = getNotificationsContext();
 
-    let parametersPanelOpened = false;
     let parameterErrorMessage = null;
 
     function launchHoi4(): void {
@@ -57,11 +57,11 @@
     </div>
     <div class="bottom-row">
         <Accordion style="width: 80%;">
-            <Panel square variant="outlined" color="primary" extend bind:open={parametersPanelOpened}>
+            <Panel square variant="outlined" color="primary" extend bind:open={$launchParametersOpened}>
                 <Header>
                     {$_('home.launch_parameters')}
                     <span slot="description">{$_('home.launch_parameters.description')}</span>
-                    <IconButton slot="icon" toggle pressed={parametersPanelOpened}>
+                    <IconButton slot="icon" toggle pressed={$launchParametersOpened}>
                         <Icon class="material-icons" on>unfold_less</Icon>
                         <Icon class="material-icons">unfold_more</Icon>
                     </IconButton>

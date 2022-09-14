@@ -728,6 +728,15 @@
     "@tsconfig/svelte" "^3.0.0"
     svelte2tsx "^0.5.5"
 
+"@smui/common@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@smui/common/-/common-6.1.0.tgz#2612838e04a5e8ab637008060692188a24a5fc2f"
+  integrity sha512-hetelX4vz37P34K7LbLrkf4eYM2uuXN6r7vhO/W6jF4SjH1G6VCeRQLJsza2oNKdbgEEqVkx99xXmSJQuDOd8Q==
+  dependencies:
+    "@material/dom" "^13.0.0"
+    "@tsconfig/svelte" "^3.0.0"
+    svelte2tsx "^0.5.12"
+
 "@smui/floating-label@^6.0.0-beta.16":
   version "6.0.0-beta.16"
   resolved "https://registry.yarnpkg.com/@smui/floating-label/-/floating-label-6.0.0-beta.16.tgz#e5a8d185ed99ccd9b3298befed48eff7e6a378c0"
@@ -789,6 +798,16 @@
     "@material/menu-surface" "^13.0.0"
     "@smui/common" "^6.0.0-beta.16"
     svelte2tsx "^0.5.5"
+
+"@smui/menu-surface@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@smui/menu-surface/-/menu-surface-6.1.0.tgz#6bf6154e00fb067efcb2f29688a7ce62b24cb6a3"
+  integrity sha512-rEytTaNxoGWpOMcxye5k3L3cJjBvExxVzKWbpZnJVlCcRFtFUiV4+hfIAWH5uWWxVK1T861UXvUB3+WzaIZ0SA==
+  dependencies:
+    "@material/animation" "^13.0.0"
+    "@material/menu-surface" "^13.0.0"
+    "@smui/common" "^6.1.0"
+    svelte2tsx "^0.5.12"
 
 "@smui/menu@^6.0.0-beta.16":
   version "6.0.0-beta.16"
@@ -2961,6 +2980,13 @@ long@^4.0.0:
   resolved "https://registry.yarnpkg.com/long/-/long-4.0.0.tgz#9a7b71cfb7d361a194ea555241c92f7468d5bf28"
   integrity sha512-XsP+KhQif4bjX1kbuSiySJFNAehNxgLb6hPRGJ9QsUr8ajHkuXGdrHmFUTUUXhDwVX2R5bY4JNZEwbUiMhV+MA==
 
+lowdb@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-3.0.0.tgz#c10ab4e7eb86f1cbe255e35e60ffb0c6f42049e0"
+  integrity sha512-9KZRulmIcU8fZuWiaM0d5e2/nPnrFyXkeXVpqT+MJS+vgbgOf1EbtvgQmba8HwUFgDl1oeZR6XqEJnkJmQdKmg==
+  dependencies:
+    steno "^2.1.0"
+
 lower-case@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-2.0.2.tgz#6fa237c63dbdc4a82ca0fd882e4722dc5e634e28"
@@ -3889,6 +3915,11 @@ steamid@^1.1.0:
   dependencies:
     cuint "^0.2.1"
 
+steno@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/steno/-/steno-2.1.0.tgz#05a9c378ce42ed04f642cda6fcb41787a10e4e33"
+  integrity sha512-mauOsiaqTNGFkWqIfwcm3y/fq+qKKaIWf1vf3ocOuTdco9XoHCO2AGF1gFYXuZFSWuP38Q8LBHBGJv2KnJSXyA==
+
 string-width@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-1.0.2.tgz#118bdf5b8cdc51a2a7e70d211e07e2b0b9b107d3"
@@ -4047,6 +4078,14 @@ svelte-preprocess@^4.0.0, svelte-preprocess@^4.9.8:
     magic-string "^0.25.7"
     sorcery "^0.10.0"
     strip-indent "^3.0.0"
+
+svelte2tsx@^0.5.12:
+  version "0.5.16"
+  resolved "https://registry.yarnpkg.com/svelte2tsx/-/svelte2tsx-0.5.16.tgz#982c0c630e445e818309dcea24cf0c392c38abdc"
+  integrity sha512-MwgpeRHfzP8T7NkFNT1JPhe9pCF4Dml2oSdjL2zNqvSprjA2BFgQuCNUg4R5qSz7AxVDJsiL/2hciCtVbXAT3A==
+  dependencies:
+    dedent-js "^1.0.1"
+    pascal-case "^3.1.1"
 
 svelte2tsx@^0.5.5:
   version "0.5.11"

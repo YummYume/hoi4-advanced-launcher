@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "main": "src/index.js",
   "scripts": {
-    "start": "concurrently \"yarn dev\" \"yarn electron\"",
+    "start": "yarn electron",
     "dev": "vite",
     "build": "vite build",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -21,6 +21,7 @@
     "@smui/form-field": "^6.0.0-beta.16",
     "@smui/icon-button": "^6.0.0-beta.16",
     "@smui/list": "^6.0.0-beta.16",
+    "@smui/menu-surface": "^6.1.0",
     "@smui/radio": "^6.0.0-beta.16",
     "@smui/select": "^6.0.0-beta.16",
     "@smui/switch": "^6.0.0-beta.16",
@@ -54,6 +55,7 @@
     "electron-store": "^8.0.2",
     "electron-unhandled": "^4.0.1",
     "json-fixer": "^1.6.13",
+    "lowdb": "^3.0.0",
     "steam-game-path": "^2.2.0"
   }
 }

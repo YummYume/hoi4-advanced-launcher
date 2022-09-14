@@ -2,6 +2,7 @@
 common.confirm: Confirm
 common.cancel: Cancel
 common.select: Select
+common.skip: Ignore
 common.something_went_wrong: Oops... An unexpected error occurred.
 
 ### Menu
@@ -21,24 +22,55 @@ parameters.invalid: 'Invalid parameter : {input}'
 parameters.enable_strict_mode: Enable strict mode
 parameter.no_description: No description provided.
 parameter.description.allowoldsave: >
-  Allows save games with older save game versions to be loaded with only a tooltip warning, instead of blocking them altogether.
-  Especially useful for testing shortly after increasing the save game version, since recent save games will still be loadable and relevant.
+    Allows save games with older save game versions to be loaded with only a tooltip warning, instead of blocking them altogether.
+    Especially useful for testing shortly after increasing the save game version, since recent save games will still be loadable and relevant.
 parameter.description.autosave: Overrides the autosave interval in the user's settings.txt file.
 parameter.description.autosave_count: >
-  Overrides the debug_saves count in the user's settings.txt file. Specifies how many autosave files are kept before the oldest one is deleted when creating a new one.
+    Overrides the debug_saves count in the user's settings.txt file. Specifies how many autosave files are kept before the oldest one is deleted when creating a new one.
 parameter.description.checksum: >
-  Computes and writes out the overall checksum and the checksum of each individual game data file to logs/system.log.
-  Useful when trying to identify if there is a modification to a single file, or some other file that exists but shouldn't, throwing off the checksum and blocking multiplayer.
+    Computes and writes out the overall checksum and the checksum of each individual game data file to logs/system.log.
+    Useful when trying to identify if there is a modification to a single file, or some other file that exists but shouldn't, throwing off the checksum and blocking multiplayer.
 parameter.description.crash_data_log: >
-  Collects data on errors based on crashes that occur with critical bugs and malfunctions. Including if a buggy mod is activated from the launcher.
+    Collects data on errors based on crashes that occur with critical bugs and malfunctions. Including if a buggy mod is activated from the launcher.
 parameter.description.debug: >
-  Indicates that the game is running in debug mode, enabling a variety of extra behavior to help with development or testing.
-  Can be turned on from the game console using the debug command. Disables multiplayer.
+    Indicates that the game is running in debug mode, enabling a variety of extra behavior to help with development or testing.
+    Can be turned on from the game console using the debug command. Disables multiplayer.
+parameter.description.dump_script_doc: Dumps a JSON file containing the structured documentation for scripts.
+parameter.description.hands_off: >
+    Automatically starts a 1936 game as Uruguay, unpaused, running at maximum speed, with human AI turned on.
+    Additional effects include enabling the AI testing, test logs, and view, disabling the end screen, and disabling frame smoothing.
+parameter.description.historical: >
+    Forces the historical focus gameplay setting on or off.
+    Only works in conjunction with any auto-start option, like -hands_off or -start_tag.
+    Default value in game is -historical=yes, so only -historical=no has any real effect currently.
+parameter.description.human_ai: Turns human AI on, so that even the country that the player is controlling is managed by AI.
+parameter.description.logpostfix: >
+    Prepends the provided text to the beginning of log file names.
+    Useful when running multiple instances of the game on a single machine, such as for multiplayer testing.
+parameter.description.logprefix: >
+    Appends the provided text to the end of log file names.
+    Useful when running multiple instances of the game on a single machine, such as for multiplayer testing.
+parameter.description.nofilewatcher: >
+    Turns off the file watcher which observes game folders and reloads databases or UI when files change.
+    Off by default in Release, but turned on by -debug.
+parameter.description.nolauncher: Skips the launcher and resumes the last game with the previous mods loaded. Has no effect with this launcher.
+parameter.description.start_minimized: >
+    Starts the application minimized to the taskbar. Only available in Debug and Release_D. Only implemented on Windows at the time of writing.
+parameter.description.start_save: Skips the main menu and directly loads a save file (specified by file name but without the ".hoi4" extension).
+parameter.description.start_speed: Sets the initial speed of the game (0-4).
+parameter.description.start_tag: Skips the main menu and directly starts a 1936 game as the country specified by TAG.
 
 # Arguments
 argument: Argument
-argument.parameter_requires.title: This parameter requires an argument
+argument.parameter_requires.title: '{required, select,
+    true {This parameter requires an argument}
+    false {This parameter can receive an optional argument}
+    other {This parameter requires an argument}
+}'
 argument.description.autosave_count: Must be a number.
+argument.description.start_speed: Must be a valid game speed between 0 and 4.
+argument.description.start_tag: >
+    Country tags are usually composed of 3 uppercase letters which represent the acronym of the said country (eg: USA for United States).
 
 ### Settings
 # Launcher settings
@@ -77,7 +109,7 @@ settings.options.open_logs: Open logs folder
 # Launch error
 notification.launch_error: Something went wrong while launching the game.
 notification.invalid_hoi4_executable_path: >
-  Your HOI4 executable path seems wrong. This is most likely due to an invalid game folder path in your settings.
+    Your HOI4 executable path seems wrong. This is most likely due to an invalid game folder path in your settings.
 
 # Displays refreshed
 notification.displays_refreshed.success: Display list refreshed.
@@ -96,11 +128,11 @@ notification.save_settings_status.error: Something went wrong while saving the s
 # Confirm path
 dialog.confirm_hoi4_path.title: Path confirmation
 dialog.confirm_hoi4_path.description: >
-  The path given looks right.
-  Before confirming, ensure this is the right path to your HOI4 game folder, as an invalid path could cause issues.
+    The path given looks right.
+    Before confirming, ensure this is the right path to your HOI4 game folder, as an invalid path could cause issues.
 dialog.confirm_hoi4_path.description_auto: >
-  A valid path to your HOI4 game folder has been found.
-  Before confirming, ensure this is the right path to your HOI4 game folder, as an invalid path could cause issues.
+    A valid path to your HOI4 game folder has been found.
+    Before confirming, ensure this is the right path to your HOI4 game folder, as an invalid path could cause issues.
 
 # Parameter argument
 dialog.parameter_argument.invalid_argument: 'Invalid argument : {argument}'

@@ -21,7 +21,11 @@
 </script>
 
 <DialogContent>
-    <h1 id={titleId} slot="header">{$_('argument.parameter_requires.title')}</h1>
+    <h1 id={titleId} slot="header">
+        {$_('argument.parameter_requires.title', {
+            values: { required: parameter.argument.optional ? 'false' : 'true' }
+        })}
+    </h1>
     <svelte:fragment slot="body">
         {#if parameter.argument.description}
             <p>{$_(`argument.description.${parameter.argument.description}`)}</p>
@@ -60,6 +64,11 @@
         <Button on:click={() => close(null)}>
             <ButtonLabel>{$_('common.cancel')}</ButtonLabel>
         </Button>
+        {#if parameter.argument.optional}
+            <Button on:click={() => close('')}>
+                <ButtonLabel>{$_('common.skip')}</ButtonLabel>
+            </Button>
+        {/if}
         <Button
             defaultAction
             disabled={strictMode && (!isValid || !Boolean(argument))}

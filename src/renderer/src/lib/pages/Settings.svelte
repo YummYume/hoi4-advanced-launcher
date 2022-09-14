@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { locale } from 'svelte-i18n';
     import { fade } from 'svelte/transition';
 
     import GameSettings from '../components/pages/settings/GameSettings.svelte';
@@ -7,9 +8,11 @@
 </script>
 
 <section class="container" in:fade>
-    <LauncherSettings />
-    <GameSettings />
-    <LauncherOptions />
+    {#key $locale}
+        <LauncherSettings />
+        <GameSettings />
+        <LauncherOptions />
+    {/key}
 </section>
 
 <style>

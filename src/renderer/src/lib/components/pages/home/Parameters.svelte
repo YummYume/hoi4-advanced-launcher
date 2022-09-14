@@ -65,10 +65,10 @@
                         type: 'danger'
                     });
                 } finally {
-                    if (argument && 0 < currentParameters.length) {
+                    if (typeof argument === 'string' && 0 < currentParameters.length) {
                         const lastElement = currentParameters[currentParameters.length - 1];
 
-                        currentParameters.splice(-1, 1, `${lastElement}=${argument}`);
+                        currentParameters.splice(-1, 1, argument ? `${lastElement}=${argument}` : `${lastElement}`);
                     } else {
                         // always trigger a re-render
                         currentParameters.splice(-1, 1, argument);
@@ -108,7 +108,7 @@
         <Chip {chip} touch shouldFocusPrimaryActionOnClick={false} shouldRemoveOnTrailingIconClick={false}>
             <ChipText>{chip.key}</ChipText>
         </Chip>
-        <Tooltip showDelay={1000} hideDelay={100}>
+        <Tooltip xPos="center" yPos="above" showDelay={1000} hideDelay={100}>
             <TooltipContent>
                 {chip.description ? $_(`parameter.description.${chip.description}`) : $_('parameter.no_description')}
             </TooltipContent>

@@ -2,6 +2,7 @@
 common.confirm: Confirmer
 common.cancel: Annuler
 common.select: Sélectionner
+common.skip: Ignorer
 common.something_went_wrong: Oups... Une erreur inattendue s'est produite.
 
 ### Menu
@@ -21,26 +22,59 @@ parameters.invalid: 'Paramètre invalide : {input}'
 parameters.enable_strict_mode: Activer le mode strict
 parameter.no_description: Aucune description fournie.
 parameter.description.allowoldsave: >
-  Permet aux sauvegardes de jeux avec des versions de sauvegarde plus anciennes d'être chargées avec seulement un avertissement d'info-bulle, au lieu de les bloquer complètement.
-  Particulièrement utile pour tester peu de temps après avoir augmenté la version de la sauvegarde, car les sauvegardes récentes seront toujours chargeables et pertinentes.
+    Permet aux sauvegardes de jeux avec des versions de sauvegarde plus anciennes d'être chargées avec seulement un avertissement d'info-bulle, au lieu de les bloquer complètement.
+    Particulièrement utile pour tester peu de temps après avoir augmenté la version de la sauvegarde, car les sauvegardes récentes seront toujours chargeables et pertinentes.
 parameter.description.autosave: Remplace l'intervalle d'enregistrement automatique dans le fichier settings.txt de l'utilisateur.
 parameter.description.autosave_count: >
-  Remplace le nombre de debug_saves dans le fichier settings.txt de l'utilisateur.
-  Spécifie le nombre de fichiers de sauvegarde automatique conservés avant que le plus ancien ne soit supprimé lors de la création d'un nouveau.
+    Remplace le nombre de debug_saves dans le fichier settings.txt de l'utilisateur.
+    Spécifie le nombre de fichiers de sauvegarde automatique conservés avant que le plus ancien ne soit supprimé lors de la création d'un nouveau.
 parameter.description.checksum: >
-  Calcule et écrit la somme de contrôle globale (checksum) et la somme de contrôle de chaque fichier de données de jeu individuel dans logs/system.log.
-  Utile lorsque vous essayez d'identifier s'il y a une modification d'un seul fichier, ou d'un autre fichier qui existe mais ne devrait pas, rejetant la somme de contrôle et bloquant le multijoueur.
+    Calcule et écrit la somme de contrôle globale (checksum) et la somme de contrôle de chaque fichier de données de jeu individuel dans logs/system.log.
+    Utile lorsque vous essayez d'identifier s'il y a une modification d'un seul fichier, ou d'un autre fichier qui existe mais ne devrait pas, rejetant la somme de contrôle et bloquant le multijoueur.
 parameter.description.crash_data_log: >
-  Collecte des données sur les erreurs en fonction des plantages qui se produisent avec des bogues et des dysfonctionnements critiques.
-  Y compris si un mod bogué est activé depuis le launcher.
+    Collecte des données sur les erreurs en fonction des plantages qui se produisent avec des bogues et des dysfonctionnements critiques.
+    Y compris si un mod bogué est activé depuis le launcher.
 parameter.description.debug: >
-  Indique que le jeu fonctionne en mode débogage, permettant une variété de comportements supplémentaires pour aider au développement ou aux tests.
-  Peut être activé à partir de la console de jeu à l'aide de la commande de débogage. Désactive le multijoueur.
+    Indique que le jeu fonctionne en mode débogage, permettant une variété de comportements supplémentaires pour aider au développement ou aux tests.
+    Peut être activé à partir de la console de jeu à l'aide de la commande de débogage. Désactive le multijoueur.
+parameter.description.dump_script_doc: Écrit un fichier JSON contenant la documentation structurée pour les scripts.
+parameter.description.hands_off: >
+    Démarre automatiquement une partie en 1936 en tant qu'Uruguay, sans pause, fonctionnant à vitesse maximale, avec l'IA humaine activée.
+    Les effets supplémentaires incluent l'activation des tests d'IA, des logs de test et de la vue, la désactivation de l'écran de fin et la désactivation du lissage des images.
+parameter.description.historical: >
+    Force l'activation ou la désactivation du paramètre de gameplay de mise au point historique.
+    Ne fonctionne qu'en conjonction avec une option de démarrage automatique, comme -hands_off ou -start_tag.
+    La valeur par défaut dans le jeu est -historical=yes, donc seul -historical=no a un effet réel actuellement.
+parameter.description.human_ai: Active l'IA humaine, de sorte que même le pays que le joueur contrôle est géré par l'IA.
+parameter.description.logpostfix: >
+    Ajoute le texte fourni au début des noms de fichiers de logs.
+    Utile lors de l'exécution de plusieurs instances du jeu sur une seule machine, comme pour les tests multijoueurs.
+parameter.description.logprefix: >
+    Ajoute le texte fourni à la fin des noms de fichiers de logs.
+    Utile lors de l'exécution de plusieurs instances du jeu sur une seule machine, comme pour les tests multijoueurs.
+parameter.description.nofilewatcher: >
+    Désactive l'observateur de fichiers qui observe les dossiers du jeu et recharge les bases de données ou l'interface utilisateur lorsque les fichiers changent.
+    Désactivé par défaut dans Release, mais activé par -debug.
+parameter.description.nolauncher: Ignore le lanceur et reprend le dernier jeu avec les mods précédents chargés. N'a aucun effet avec ce launcher.
+parameter.description.start_minimized: >
+    Démarre l'application réduite dans la barre des tâches.
+    Uniquement disponible dans Debug et Release_D. Uniquement implémenté sur Windows au moment de la rédaction.
+parameter.description.start_save: >
+    Ignore le menu principal et charge directement un fichier de sauvegarde (spécifié par le nom du fichier mais sans l'extension ".hoi4").
+parameter.description.start_speed: Définit la vitesse initiale du jeu (0-4).
+parameter.description.start_tag: Ignore le menu principal et démarre directement une partie en 1936 en tant que pays spécifié par TAG.
 
 # Arguments
 argument: Argument
-argument.parameter_requires.title: Ce paramètre nécessite un argument
+argument.parameter_requires.title: '{required, select,
+    true {Ce paramètre nécessite un argument}
+    false {Ce paramètre peut recevoir un argument optionnel}
+    other {Ce paramètre nécessite un argument}
+}'
 argument.description.autosave_count: Doit être un nombre.
+argument.description.start_speed: Doit être une vitesse de jeu valide entre 0 et 4.
+argument.description.start_tag: >
+    Les balises de pays sont généralement composées de 3 lettres majuscules qui représentent l'acronyme dudit pays (ex : USA pour États-Unis).
 
 ### Settings
 # Launcher settings
@@ -79,7 +113,7 @@ settings.options.open_logs: Ouvrir le dossier des logs
 # Launch error
 notification.launch_error: Une erreur est survenue lors du lancement du jeu.
 notification.invalid_hoi4_executable_path: >
-  Votre chemin d'exécutable pour HOI4 semble erroné. Cela est probablement dû à un chemin du dossier de jeu invalide dans vos paramètres.
+    Votre chemin d'exécutable pour HOI4 semble erroné. Cela est probablement dû à un chemin du dossier de jeu invalide dans vos paramètres.
 
 # Displays refreshed
 notification.displays_refreshed.success: Liste des moniteurs actualisée.
@@ -98,11 +132,11 @@ notification.save_settings_status.error: Une erreur s'est produite lors de l'enr
 # Confirm path
 dialog.confirm_hoi4_path.title: Validation du chemin
 dialog.confirm_hoi4_path.description: >
-  Le chemin indiqué semble correct.
-  Avant de confirmer, assurez-vous qu'il s'agit du bon chemin vers votre dossier de jeu HOI4, car un chemin invalide pourrait causer des problèmes.
+    Le chemin indiqué semble correct.
+    Avant de confirmer, assurez-vous qu'il s'agit du bon chemin vers votre dossier de jeu HOI4, car un chemin invalide pourrait causer des problèmes.
 dialog.confirm_hoi4_path.description_auto: >
-  Un chemin valide vers votre dossier de jeu HOI4 a été trouvé.
-  Avant de confirmer, assurez-vous qu'il s'agit du bon chemin vers votre dossier de jeu HOI4, car un chemin invalide pourrait causer des problèmes.
+    Un chemin valide vers votre dossier de jeu HOI4 a été trouvé.
+    Avant de confirmer, assurez-vous qu'il s'agit du bon chemin vers votre dossier de jeu HOI4, car un chemin invalide pourrait causer des problèmes.
 
 # Parameter argument
 dialog.parameter_argument.invalid_argument: 'Argument invalide : {argument}'
