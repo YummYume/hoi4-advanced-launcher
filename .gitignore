@@ -25,3 +25,6 @@ dist-ssr
 
 # Parsed translations
 src/renderer/src/translations/*.json
+
+# DB
+db.sqlite

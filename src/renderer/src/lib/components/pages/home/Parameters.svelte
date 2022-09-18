@@ -6,7 +6,7 @@
     import FormField from '@smui/form-field';
     import HelperText from '@smui/textfield/helper-text';
     import { dialogs } from 'svelte-dialogs';
-    import { getNotificationsContext } from 'svelte-notifications';
+    import { toast } from '@zerodevx/svelte-toast';
     import { _ } from 'svelte-i18n';
 
     import { Parameter, parameters } from '../../../data/parameters';
@@ -15,8 +15,6 @@
     export let strictMode = true;
     export let parameterErrorMessage = null;
     export let launchParameters = '';
-
-    const { addNotification, removeNotification } = getNotificationsContext();
 
     $: launchParameters = strictMode ? launchParameters.replace(/  +/g, ' ') : launchParameters;
     $: inputParameters = launchParameters.trim().split(' ');
@@ -56,14 +54,7 @@
                 } catch (e) {
                     api.logs().error(e);
 
-                    removeNotification('launch-error');
-                    addNotification({
-                        id: 'launch-error',
-                        text: $_('common.something_went_wrong'),
-                        position: 'top-center',
-                        removeAfter: 5000,
-                        type: 'danger'
-                    });
+                    toast.push($_('common.something_went_wrong'), { classes: ['error'] });
                 } finally {
                     if (typeof argument === 'string' && 0 < currentParameters.length) {
                         const lastElement = currentParameters[currentParameters.length - 1];

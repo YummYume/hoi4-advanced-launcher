@@ -4,6 +4,10 @@ common.cancel: Cancel
 common.select: Select
 common.skip: Ignore
 common.something_went_wrong: Oops... An unexpected error occurred.
+common.default: Default
+common.add: Add
+common.update: Update
+common.delete: Delete
 
 ### Menu
 menu.home: Launcher
@@ -72,6 +76,16 @@ argument.description.start_speed: Must be a valid game speed between 0 and 4.
 argument.description.start_tag: >
     Country tags are usually composed of 3 uppercase letters which represent the acronym of the said country (eg: USA for United States).
 
+### Mods & DLC
+mods.title: Mods
+mods.playsets: Playsets
+
+# Playsets
+playset.title: Title
+playset.description: Description
+playset.default.title: All mods
+playset.default.description: Default playset with all your mods
+
 ### Settings
 # Launcher settings
 settings.launcher: Launcher settings
@@ -110,6 +124,11 @@ settings.options.open_logs: Open logs folder
 notification.launch_error: Something went wrong while launching the game.
 notification.invalid_hoi4_executable_path: >
     Your HOI4 executable path seems wrong. This is most likely due to an invalid game folder path in your settings.
+
+# Playsets
+notification.playset.adding: Adding playset...
+notification.playset.added: Playset "{name}" added successfully!
+notification.playset.error: Oops... Something went wrong while adding the playset. Please try again.
 
 # Displays refreshed
 notification.displays_refreshed.success: Display list refreshed.

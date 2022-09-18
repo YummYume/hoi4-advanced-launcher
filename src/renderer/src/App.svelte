@@ -6,6 +6,7 @@
     import { onMount } from 'svelte';
     import { Circle2 } from 'svelte-loading-spinners';
     import { fade } from 'svelte/transition';
+    import { SvelteToast } from '@zerodevx/svelte-toast';
 
     import { tabs } from './lib/data/tabs';
     import { currentTab } from './lib/stores/currentTab';
@@ -70,6 +71,7 @@
         <svelte:component this={$currentTab.component} />
     </Notifications>
 </main>
+<SvelteToast options={{ duration: 5000, pausable: true, reversed: true, theme: { '--toastBarBackground': '#fff' } }} />
 
 <style>
     main {
@@ -87,5 +89,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    :global(.info) {
+        --toastBackground: rgb(10, 41, 143);
+    }
+    :global(.success) {
+        --toastBackground: green;
+    }
+    :global(.warning) {
+        --toastBackground: rgb(102, 102, 7);
+    }
+    :global(.error) {
+        --toastBackground: red;
     }
 </style>

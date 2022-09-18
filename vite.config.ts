@@ -15,5 +15,10 @@ export default defineConfig({
     base: './',
     build: {
         target: 'esnext'
+    },
+    server: {
+        watch: {
+            usePolling: true
+        }
     }
 });

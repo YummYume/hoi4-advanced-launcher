@@ -26,4 +26,13 @@ declare const api: {
     getLaunchParameters: () => string;
     setLaunchParametersStrictMode: (strictMode: boolean) => Promise<void>;
     getLaunchParametersStrictMode: () => boolean;
+    getAllPlaysets: () => Promise<import('./renderer/src/lib/stores/playsets').Playset[]>;
+    addPlayset: (
+        data: import('./renderer/src/lib/stores/playsets').PlaysetWithoutId
+    ) => Promise<import('./renderer/src/lib/stores/playsets').Playset>;
+    updatePlayset: (
+        id: string | number,
+        data: Partial<import('./renderer/src/lib/stores/playsets').PlaysetWithoutId>
+    ) => Promise<number>;
+    removePlayset: (id: string | number) => Promise<number>;
 };

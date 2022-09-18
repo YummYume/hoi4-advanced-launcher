@@ -4,9 +4,9 @@
     import FormField from '@smui/form-field';
     import Switch from '@smui/switch';
     import { fly } from 'svelte/transition';
-    import { getNotificationsContext } from 'svelte-notifications';
     import IconButton from '@smui/icon-button';
     import Tooltip, { Wrapper, Content as TooltipContent } from '@smui/tooltip';
+    import { toast } from '@zerodevx/svelte-toast';
 
     import SectionTitleUnderline from '../../SectionTitleUnderline.svelte';
     import {
@@ -19,12 +19,11 @@
     import { displayScreens } from '../../../stores/displayScreens';
     import { gameSettings } from '../../../stores/gameSettings';
 
-    const { addNotification, removeNotification } = getNotificationsContext();
-
     let currentGameSettings = $gameSettings;
     let refreshingDisplays = false;
+    let justPassingBy = true;
 
-    $: currentGameSettings, handleSettingsSave();
+    $: currentGameSettings, justPassingBy ? (justPassingBy = false) : handleSettingsSave();
     $: if ('fullscreen' !== currentGameSettings.Graphics.display_mode.value) {
         currentGameSettings.Graphics.vsync.enabled = false;
     }
@@ -108,51 +107,29 @@
 
     async function handleScreenRefresh() {
         try {
-            removeNotification('displays-refreshed-status');
-
             refreshingDisplays = true;
             await displayScreens.update();
 
             api.logs().info('Display list refreshed.');
 
-            addNotification({
-                id: 'displays-refreshed-status',
-                text: $_('notification.displays_refreshed.success'),
-                position: 'top-center',
-                removeAfter: 5000,
-                type: 'success'
-            });
+            toast.push($_('notification.displays_refreshed.success'), { classes: ['info'] });
         } catch (e) {
             api.logs().error(e);
 
-            addNotification({
-                id: 'displays-refreshed-status',
-                text: $_('notification.displays_refreshed.error'),
-                position: 'top-center',
-                removeAfter: 5000,
-                type: 'danger'
-            });
+            toast.push($_('notification.displays_refreshed.error'), { classes: ['error'] });
         }
 
         refreshingDisplays = false;
     }
 
     async function handleSettingsSave() {
-        removeNotification('hoi4-save-settings-status');
-
         try {
             await gameSettings.save();
             api.logs().info('Settings saved.');
         } catch (e) {
             api.logs().error(e);
 
-            addNotification({
-                id: 'hoi4-save-settings-status',
-                text: $_('notification.save_settings_status.error'),
-                position: 'top-center',
-                removeAfter: 5000,
-                type: 'error'
-            });
+            toast.push($_('notification.save_settings_status.error'), { classes: ['error'] });
         }
     }
 </script>

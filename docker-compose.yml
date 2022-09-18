@@ -4,7 +4,7 @@ services:
             context: .
             dockerfile: Dockerfile
         volumes:
-            - "./src/renderer:/usr/src/app:rw,cached"
+            - "./:/usr/src/app:rw,cached"
             - "/usr/src/app/node_modules"
         stdin_open: true
         ports:

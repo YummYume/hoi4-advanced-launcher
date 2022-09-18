@@ -6,4 +6,4 @@ COPY ./package.json ./yarn.lock ./
 
 RUN yarn install
 
-CMD ["yarn", "dev"]
+CMD ["yarn", "dev", "--host"]

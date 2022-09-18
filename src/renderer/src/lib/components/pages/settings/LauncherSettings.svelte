@@ -4,17 +4,15 @@
     import FormField from '@smui/form-field';
     import Button, { Label } from '@smui/button';
     import Textfield from '@smui/textfield';
-    import { getNotificationsContext } from 'svelte-notifications';
     import { dialogs } from 'svelte-dialogs';
     import IconButton from '@smui/icon-button';
     import Tooltip, { Wrapper, Content as TooltipContent } from '@smui/tooltip';
+    import { toast } from '@zerodevx/svelte-toast';
 
     import SectionTitleUnderline from '../../../components/SectionTitleUnderline.svelte';
     import { supportedLanguages } from '../../../data/languages';
     import ConfirmHoi4Path from '../../../components/ConfirmHoi4Path.svelte';
     import { loading } from '../../../stores/loading';
-
-    const { addNotification, removeNotification } = getNotificationsContext();
 
     let steamPath = api.getHoi4Path();
     let currentLocale = supportedLanguages.find((l) => l.key === $locale);
@@ -25,7 +23,6 @@
     $: gamePath = steamPath ?? '';
 
     async function handleFolderPathSelect(auto = false) {
-        removeNotification('hoi4-select-path-status');
         const path = auto ? api.findHoi4DirPath() : await api.folderPathInput();
 
         if (!path && !auto) {
@@ -46,38 +43,23 @@
 
                     api.logs().info(`HOI4 dir path changed to : ${path}`);
 
-                    addNotification({
-                        id: 'hoi4-select-path-status',
-                        text: $_('notification.select_hoi4_folder_path.success'),
-                        position: 'top-center',
-                        removeAfter: 5000,
-                        type: 'success'
-                    });
+                    toast.push($_('notification.select_hoi4_folder_path.success'), { classes: ['success'] });
                 } catch (e) {
                     $loading = false;
                     api.logs().error('Error while changing HOI4 dir path.');
 
-                    addNotification({
-                        id: 'hoi4-select-path-status',
-                        text: $_('notification.select_hoi4_folder_path.error'),
-                        position: 'top-center',
-                        removeAfter: 5000,
-                        type: 'warning'
-                    });
+                    toast.push($_('notification.select_hoi4_folder_path.error'), { classes: ['error'] });
                 }
             }
         } else {
-            addNotification({
-                id: 'hoi4-select-path-status',
-                text: $_(
+            toast.push(
+                $_(
                     auto
                         ? 'notification.select_hoi4_folder_path.not_found'
                         : 'notification.select_hoi4_folder_path.invalid'
                 ),
-                position: 'top-center',
-                removeAfter: 5000,
-                type: 'danger'
-            });
+                { classes: ['warning'] }
+            );
         }
     }
 </script>

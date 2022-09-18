@@ -1,11 +1,11 @@
 <script lang="ts">
     import { fade } from 'svelte/transition';
 
-    import ModList from '../components/pages/mods/ModList.svelte';
+    import Playsets from '../components/pages/mods/Playsets.svelte';
 </script>
 
 <section class="container" in:fade>
-    <ModList />
+    <Playsets />
 </section>
 
 <style>

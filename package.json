@@ -3,7 +3,7 @@
   "productName": "HOI4 Advanced Launcher",
   "private": true,
   "version": "0.1.0",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "scripts": {
     "start": "yarn electron",
     "dev": "vite",
@@ -17,7 +17,9 @@
     "@smui-extra/accordion": "^6.0.0-beta.16",
     "@smui-extra/autocomplete": "^6.0.0-beta.16",
     "@smui/button": "^6.0.0-beta.16",
+    "@smui/checkbox": "^6.1.0",
     "@smui/chips": "^6.0.0-beta.16",
+    "@smui/data-table": "^6.1.0",
     "@smui/form-field": "^6.0.0-beta.16",
     "@smui/icon-button": "^6.0.0-beta.16",
     "@smui/list": "^6.0.0-beta.16",
@@ -30,7 +32,7 @@
     "@smui/tooltip": "^6.0.0-beta.16",
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.30",
     "@tsconfig/svelte": "^2.0.1",
-    "concurrently": "^7.2.2",
+    "@zerodevx/svelte-toast": "^0.7.2",
     "electron": "^19.0.8",
     "electron-builder": "^23.1.0",
     "js-yaml": "^4.1.0",
@@ -55,7 +57,8 @@
     "electron-store": "^8.0.2",
     "electron-unhandled": "^4.0.1",
     "json-fixer": "^1.6.13",
-    "lowdb": "^3.0.0",
+    "sequelize": "^6.22.1",
+    "sqlite3": "^5.1.1",
     "steam-game-path": "^2.2.0"
   }
 }

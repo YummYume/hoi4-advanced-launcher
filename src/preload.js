@@ -7,6 +7,8 @@ const log = require('electron-log');
 const jsonFix = require('json-fixer');
 const unhandled = require('electron-unhandled');
 
+const { Playset } = require('./sequelize');
+
 unhandled({
     logger: log.error,
     showDialog: true,
@@ -383,6 +385,18 @@ contextBridge.exposeInMainWorld('api', {
         denyIfApiNotInitialized();
 
         return launchParametersStrictMode;
+    },
+    getAllPlaysets: async () => {
+        return await Playset.findAll({ raw: true });
+    },
+    addPlayset: async (data) => {
+        return (await Playset.create(data)).get({ plain: true });
+    },
+    updatePlayset: async (id, data) => {
+        return await Playset.update(data, { where: { id: id } });
+    },
+    removePlayset: async (id) => {
+        return await Playset.destroy({ where: { id: id } });
     }
 });
 

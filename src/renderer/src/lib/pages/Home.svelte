@@ -2,7 +2,7 @@
     import Button, { Label as ButtonLabel } from '@smui/button';
     import Accordion, { Panel, Header, Content as AccordionContent } from '@smui-extra/accordion';
     import IconButton, { Icon } from '@smui/icon-button';
-    import { getNotificationsContext } from 'svelte-notifications';
+    import { toast } from '@zerodevx/svelte-toast';
     import { fade } from 'svelte/transition';
     import { _ } from 'svelte-i18n';
 
@@ -10,21 +10,11 @@
     import { launchParametersOpened } from '../stores/launchParametersOpened';
     import Parameters from '../components/pages/home/Parameters.svelte';
 
-    const { addNotification, removeNotification } = getNotificationsContext();
-
     let parameterErrorMessage = null;
 
     function launchHoi4(): void {
-        removeNotification('launch-error');
-
         if (!api.isValidHoi4ExecutablePath(api.getHoi4ExecutablePath())) {
-            addNotification({
-                id: 'launch-error',
-                text: $_('notification.invalid_hoi4_executable_path'),
-                position: 'top-center',
-                removeAfter: 5000,
-                type: 'danger'
-            });
+            toast.push($_('notification.invalid_hoi4_executable_path'), { classes: ['error'] });
 
             return;
         }
@@ -34,13 +24,7 @@
         } catch (e) {
             api.logs().error(e);
 
-            addNotification({
-                id: 'launch-error',
-                text: $_('notification.launch_error'),
-                position: 'top-center',
-                removeAfter: 5000,
-                type: 'danger'
-            });
+            toast.push($_('notification.launch_error'), { classes: ['error'] });
         }
     }
 </script>

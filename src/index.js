@@ -5,6 +5,8 @@ const Store = require('electron-store');
 const unhandled = require('electron-unhandled');
 const fs = require('fs');
 
+const { sequelize } = require('./sequelize');
+
 const isDev = !app.isPackaged;
 const lock = app.requestSingleInstanceLock();
 
@@ -78,6 +80,7 @@ if (!lock) {
             reportButton: (error) => unhandledReportButton(error)
         });
 
+        sequelize.sync({ alter: true });
         const storeSchema = {
             locale: {
                 type: 'string'
@@ -127,6 +130,7 @@ if (!lock) {
         ipcMain.handleOnce('userDocumentsPath', () => app.getPath('documents'));
         ipcMain.handleOnce('appName', () => app.getName());
         ipcMain.handleOnce('isDev', () => isDev);
+        ipcMain.handleOnce('getSequelizeInstance', () => sequelize);
         ipcMain.handle('getAllDisplays', () => screen.getAllDisplays());
         ipcMain.handle('openDirectoryDialog', async () => {
             const { canceled, filePaths } = await dialog.showOpenDialog(mainWindow, {

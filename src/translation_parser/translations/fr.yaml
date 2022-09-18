@@ -4,6 +4,10 @@ common.cancel: Annuler
 common.select: Sélectionner
 common.skip: Ignorer
 common.something_went_wrong: Oups... Une erreur inattendue s'est produite.
+common.default: Défaut
+common.add: Ajouter
+common.update: Mettre à jour
+common.delete: Supprimer
 
 ### Menu
 menu.home: Launcher
@@ -75,6 +79,16 @@ argument.description.autosave_count: Doit être un nombre.
 argument.description.start_speed: Doit être une vitesse de jeu valide entre 0 et 4.
 argument.description.start_tag: >
     Les balises de pays sont généralement composées de 3 lettres majuscules qui représentent l'acronyme dudit pays (ex : USA pour États-Unis).
+
+### Mods & DLC
+mods.title: Mods
+mods.playsets: Playsets
+
+# Playsets
+playset.title: Titre
+playset.description: Description
+playset.default.title: Tous les mods
+playset.default.description: Playset par défaut avec tous vos mods
 
 ### Settings
 # Launcher settings
