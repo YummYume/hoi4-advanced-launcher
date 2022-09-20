@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Notifications from 'svelte-notifications';
     import Tab, { Label } from '@smui/tab';
     import TabBar from '@smui/tab-bar';
     import { isLoading, _, locale } from 'svelte-i18n';
@@ -67,9 +66,7 @@
     </TabBar>
 </header>
 <main>
-    <Notifications>
-        <svelte:component this={$currentTab.component} />
-    </Notifications>
+    <svelte:component this={$currentTab.component} />
 </main>
 <SvelteToast options={{ duration: 5000, pausable: true, reversed: true, theme: { '--toastBarBackground': '#fff' } }} />
 

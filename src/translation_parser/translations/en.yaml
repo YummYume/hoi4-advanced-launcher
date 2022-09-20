@@ -126,9 +126,10 @@ notification.invalid_hoi4_executable_path: >
     Your HOI4 executable path seems wrong. This is most likely due to an invalid game folder path in your settings.
 
 # Playsets
-notification.playset.adding: Adding playset...
-notification.playset.added: Playset "{name}" added successfully!
-notification.playset.error: Oops... Something went wrong while adding the playset. Please try again.
+notification.playset.error: Oops... Something went wrong while loading the playsets.
+notification.playset.add: Adding playset...
+notification.playset.add.success: Playset "{name}" added successfully!
+notification.playset.add.error: Oops... Something went wrong while adding the playset. Please try again.
 
 # Displays refreshed
 notification.displays_refreshed.success: Display list refreshed.

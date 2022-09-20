@@ -24,31 +24,31 @@ function anySettingMatch(
 
     switch (supportedSetting) {
         case 'display_mode':
-            if (Boolean(gameSettings?.Graphics?.display_mode?.value)) {
+            if (gameSettings?.Graphics?.display_mode?.value) {
                 match = supportedGameDisplayModes.some((s) => s.value === gameSettings.Graphics.display_mode.value);
             }
 
             break;
         case 'language':
-            if (Boolean(gameSettings?.System?.language?.value)) {
+            if (gameSettings?.System?.language?.value) {
                 match = supportedGameLanguages.some((s) => s.value === gameSettings.System.language.value);
             }
 
             break;
         case 'renderer':
-            if (Boolean(gameSettings?.Graphics?.renderer?.value)) {
+            if (gameSettings?.Graphics?.renderer?.value) {
                 match = supportedGameRenderers.some((s) => s.value === gameSettings.Graphics.renderer.value);
             }
 
             break;
         case 'refresh_rate':
-            if (Boolean(gameSettings?.Graphics?.refreshRate?.value)) {
+            if (gameSettings?.Graphics?.refreshRate?.value) {
                 match = supportedRefreshRates.some((s) => s.value === gameSettings.Graphics.refreshRate.value);
             }
 
             break;
         case 'fullscreen_resolution':
-            if (Boolean(gameSettings?.Graphics?.fullscreen_resolution?.value)) {
+            if (gameSettings?.Graphics?.fullscreen_resolution?.value) {
                 match = supportedScreenResolutions.some(
                     (s) => s.value === gameSettings.Graphics.fullscreen_resolution.value
                 );
@@ -56,7 +56,7 @@ function anySettingMatch(
 
             break;
         case 'windowed_resolution':
-            if (Boolean(gameSettings?.Graphics?.windowed_resolution?.value)) {
+            if (gameSettings?.Graphics?.windowed_resolution?.value) {
                 match = supportedScreenResolutions.some(
                     (s) => s.value === gameSettings.Graphics.windowed_resolution.value
                 );
@@ -64,7 +64,7 @@ function anySettingMatch(
 
             break;
         case 'vsync':
-            if (Boolean(gameSettings?.Graphics?.vsync?.enabled)) {
+            if (gameSettings?.Graphics?.vsync?.enabled) {
                 match = typeof gameSettings.Graphics.vsync.enabled === 'boolean';
             }
 

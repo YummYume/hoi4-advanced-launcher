@@ -71,7 +71,7 @@
         {/if}
         <Button
             defaultAction
-            disabled={strictMode && (!isValid || !Boolean(argument))}
+            disabled={strictMode && (!isValid || !argument)}
             on:click={() => close(argument)}
         >
             <ButtonLabel>{$_('common.confirm')}</ButtonLabel>

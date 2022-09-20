@@ -1,4 +1,4 @@
-import type { PdxGameSettings } from "../stores/gameSettings";
+import type { PdxGameSettings } from '../stores/gameSettings';
 
 export const supportedGameDisplayModes: GameDisplayMode[] = [
     { label: 'fullscreen', value: 'fullscreen' },

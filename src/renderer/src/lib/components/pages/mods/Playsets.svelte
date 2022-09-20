@@ -28,18 +28,24 @@
     $: defaultPlaysetSelected = $currentPlayset.id === defaultPlayset.id;
 
     onMount(async () => {
-        await playsets.init();
+        try {
+            await playsets.init();
+        } catch (e) {
+            api.logs().error(e);
+
+            toast.push($_('notification.playset.error'), { dismissable: false, initial: 0 });
+        }
     });
 
     async function handleNewPlayset() {
         fetchingPlayset = true;
-        const addToast = toast.push($_('notification.playset.adding'), { dismissable: false, initial: 0 });
+        const addToast = toast.push($_('notification.playset.add'), { dismissable: false, initial: 0 });
 
         try {
             await playsets.add(newPlayset);
 
             toast.set(addToast, {
-                msg: $_('notification.playset.added', { values: { name: newPlayset.name } }),
+                msg: $_('notification.playset.add.success', { values: { name: newPlayset.name } }),
                 dismissable: true,
                 classes: ['success'],
                 next: 1
@@ -48,7 +54,7 @@
             api.logs().error(e);
 
             toast.set(addToast, {
-                msg: $_('notification.playset.error'),
+                msg: $_('notification.playset.add.error'),
                 dismissable: true,
                 classes: ['error'],
                 initial: 1,

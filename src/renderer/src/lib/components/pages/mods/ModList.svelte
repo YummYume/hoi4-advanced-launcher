@@ -9,7 +9,7 @@
     import type { Playset } from '../../../stores/playsets';
 
     export let playset: Playset;
-    export let isDefault: boolean = false;
+    export let isDefault = false;
     export let updatePlayset: (playset: Playset) => Promise<void>;
     export let removePlayset: (playset: Playset) => Promise<void>;
 

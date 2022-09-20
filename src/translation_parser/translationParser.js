@@ -19,7 +19,7 @@ try {
             const fileNameWithoutExtension = fileName.split('.')[0];
             const matchesName = 0 < args.length ? args.includes(fileNameWithoutExtension) : true;
 
-            return /^[a-z_\-]+.yaml$/.test(fileName) && matchesName;
+            return /^[a-z_-]+.yaml$/.test(fileName) && matchesName;
         })
         .forEach((fileName) => {
             const yamlTranslation = yaml.load(fs.readFileSync(path.join(inputDir, fileName), { encoding: 'utf-8' }));

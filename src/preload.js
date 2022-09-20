@@ -91,8 +91,8 @@ function isValidHoi4Folder(pathName) {
 }
 
 function isValidHoi4ExecutablePath(pathName) {
-    dirPath = path.dirname(pathName);
-    exeName = paths.exePath === pathName;
+    const dirPath = path.dirname(pathName);
+    const exeName = paths.exePath === pathName;
 
     return isValidHoi4Folder(dirPath) && exeName;
 }
@@ -294,7 +294,7 @@ contextBridge.exposeInMainWorld('api', {
     getTranslationFiles: () => {
         return fs
             .readdirSync(path.join(__dirname, 'renderer', 'src', 'translations'))
-            .filter((fileName) => /^[a-z_\-]+.json$/.test(fileName));
+            .filter((fileName) => /^[a-z_-]+.json$/.test(fileName));
     },
     launchHoi4: (parameters) => {
         denyIfApiNotInitialized();
@@ -305,7 +305,7 @@ contextBridge.exposeInMainWorld('api', {
 
         const child = require('child_process');
 
-        hoi4Process = child.spawn(paths.exePath, parameters, { detached: true });
+        const hoi4Process = child.spawn(paths.exePath, parameters, { detached: true });
 
         hoi4Process.on('spawn', () => {
             ipcRenderer.send('close-app');

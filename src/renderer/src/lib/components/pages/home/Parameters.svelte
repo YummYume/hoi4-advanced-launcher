@@ -22,7 +22,7 @@
     $: {
         parameterErrorMessage = null;
 
-        if (Boolean('' !== launchParameters.trim() && inputParameters)) {
+        if ('' !== launchParameters.trim() && inputParameters) {
             inputParameters.every((input) => {
                 if (!parameters.some((parameter) => parameter.matches(input))) {
                     parameterErrorMessage = $_('parameters.invalid', { values: { input } });
