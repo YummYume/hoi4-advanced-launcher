@@ -50,17 +50,19 @@
 <div class="main-paper-container">
     <div class="main-paper">
         <Paper transition elevation={titleElevation} color="primary">
-            <Title>{isDefault ? $_(playset.name) : playset.name}</Title>
-            {#if !isDefault}
-                <div>
-                    <IconButton class="material-icons no-margin" size="button" on:click={() => updatePlayset(playset)}>
-                        update
-                    </IconButton>
-                    <IconButton class="material-icons no-margin" size="button" on:click={() => removePlayset(playset)}>
-                        delete
-                    </IconButton>
-                </div>
-            {/if}
+            <div class="main-paper__title">
+                <Title>{isDefault ? $_(playset.name) : playset.name}</Title>
+                {#if !isDefault}
+                    <div class="main-paper__title--buttons">
+                        <IconButton class="material-icons no-margin" size="button" on:click={() => updatePlayset(playset)}>
+                            edit
+                        </IconButton>
+                        <IconButton class="material-icons no-margin" size="button" on:click={() => removePlayset(playset)}>
+                            delete
+                        </IconButton>
+                    </div>
+                {/if}
+            </div>
             <Content>{isDefault ? $_(playset.description) : playset.description ?? ''}</Content>
         </Paper>
         <DataTable style="width: 100%; margin-top: 1rem;">
@@ -97,5 +99,14 @@
     .main-paper {
         width: 100%;
         padding: 1rem;
+    }
+
+    .main-paper__title {
+        display: flex;
+    }
+
+    .main-paper__title > .main-paper__title--buttons {
+        flex-grow: 1;
+        text-align: right;
     }
 </style>

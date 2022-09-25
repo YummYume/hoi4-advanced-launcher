@@ -10,7 +10,7 @@
     import { _ } from 'svelte-i18n';
 
     import { Parameter, parameters } from '../../../data/parameters';
-    import ParameterArgumentDialog from '../../ParameterArgumentDialog.svelte';
+    import ParameterArgumentDialog from '../../dialogs/ParameterArgumentDialog.svelte';
 
     export let strictMode = true;
     export let parameterErrorMessage = null;
@@ -57,7 +57,7 @@
                     toast.push($_('common.something_went_wrong'), { classes: ['error'] });
                 } finally {
                     if (typeof argument === 'string' && 0 < currentParameters.length) {
-                        const lastElement = currentParameters[currentParameters.length - 1];
+                        const lastElement = currentParameters.at(-1);
 
                         currentParameters.splice(-1, 1, argument ? `${lastElement}=${argument}` : `${lastElement}`);
                     } else {

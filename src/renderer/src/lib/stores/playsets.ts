@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 
 export const defaultPlayset: Playset = {
     id: -1,
@@ -25,11 +25,18 @@ function getPlaysets() {
             await api.updatePlayset(id, data);
 
             update((currentPlaysets) => currentPlaysets.map((p) => (p.id === id ? { ...p, ...data } : p)));
+
+            if (get(currentPlayset).id === id) {
+                currentPlayset.update(p => ({ ...p, ...data }));
+            }
         },
         remove: async (id: string | number): Promise<void> => {
             await api.removePlayset(id);
 
-            currentPlayset.set(defaultPlayset);
+            if (get(currentPlayset).id === id) {
+                currentPlayset.set(defaultPlayset);
+            }
+
             update((currentPlaysets) => currentPlaysets.filter((p) => p.id !== id));
         }
     };

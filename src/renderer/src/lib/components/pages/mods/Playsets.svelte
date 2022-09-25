@@ -10,6 +10,7 @@
     import { _ } from 'svelte-i18n';
     import Button from '@smui/button';
     import { toast } from '@zerodevx/svelte-toast';
+    import { dialogs } from 'svelte-dialogs';
 
     import type { MenuSurfaceComponentDev } from '@smui/menu-surface';
 
@@ -17,6 +18,8 @@
     import { currentModsTab } from '../../../stores/currentModsTab';
     import { playsets, currentPlayset, defaultPlayset, Playset } from '../../../stores/playsets';
     import ModList from './ModList.svelte';
+    import EditPlayset from '../../dialogs/EditPlaysetDialog.svelte';
+    import DeletePlayset from '../../dialogs/DeletePlaysetDialog.svelte';
 
     let surface: MenuSurfaceComponentDev;
     let newPlayset = {
@@ -33,7 +36,7 @@
         } catch (e) {
             api.logs().error(e);
 
-            toast.push($_('notification.playset.error'), { dismissable: false, initial: 0 });
+            toast.push($_('notification.playset.error'), { classes: ['error'] });
         }
     });
 
@@ -71,11 +74,39 @@
     }
 
     async function updatePlayset(playset: Playset): Promise<void> {
-        await playsets.update(playset.id, { name: 'New name' });
+        let newPlayset: Playset | null = null;
+
+        try {
+            newPlayset = await dialogs.modal(EditPlayset, { playset });
+        } catch (e) {
+            api.logs().error(e);
+
+            toast.push($_('notification.playset.edit.error'), { classes: ['error'] });
+        } finally {
+            if (newPlayset) {
+                await playsets.update(playset.id, newPlayset);
+
+                toast.push($_('notification.playset.edit.success', { values: { name: playset.name } }), { classes: ['success'] });
+            }
+        }
     }
 
     async function removePlayset(playset: Playset): Promise<void> {
-        await playsets.remove(playset.id);
+        let willDelete = false;
+
+        try {
+            willDelete = await dialogs.modal(DeletePlayset, { playset });
+        } catch (e) {
+            api.logs().error(e);
+
+            toast.push($_('notification.playset.delete.error'), { classes: ['error'] });
+        } finally {
+            if (willDelete) {
+                await playsets.remove(playset.id);
+
+                toast.push($_('notification.playset.delete.success', { values: { name: playset.name } }), { classes: ['success'] });
+            }
+        }
     }
 </script>
 
@@ -101,6 +132,7 @@
                 </IconButton>
                 <MenuSurface bind:this={surface} anchorCorner="BOTTOM_END">
                     <div class="menu-surface">
+                        <h2 class="menu-surface__title">{$_('playset.add')}</h2>
                         <Textfield variant="outlined" bind:value={newPlayset.name} label={$_('playset.title')} />
                         <Textfield
                             variant="outlined"
@@ -152,5 +184,9 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
+    }
+
+    .menu-surface > .menu-surface__title {
+        text-align: center;
     }
 </style>

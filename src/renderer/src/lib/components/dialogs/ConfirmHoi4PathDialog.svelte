@@ -3,11 +3,11 @@
     import { DialogContent, getClose, getOptions } from 'svelte-dialogs';
     import { _ } from 'svelte-i18n';
 
-    const close = getClose();
-    const { titleId } = getOptions();
-
     export let path: string;
     export let auto: boolean;
+
+    const close = getClose();
+    const { titleId } = getOptions();
 </script>
 
 <DialogContent>

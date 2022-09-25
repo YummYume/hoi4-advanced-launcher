@@ -8,6 +8,7 @@ common.default: Défaut
 common.add: Ajouter
 common.update: Mettre à jour
 common.delete: Supprimer
+common.field_required: Ce champ est requis.
 
 ### Menu
 menu.home: Launcher
@@ -89,6 +90,7 @@ playset.title: Titre
 playset.description: Description
 playset.default.title: Tous les mods
 playset.default.description: Playset par défaut avec tous vos mods
+playset.add: Ajouter un playset
 
 ### Settings
 # Launcher settings
@@ -134,6 +136,10 @@ notification.playset.error: Oups... Une erreur s'est produite lors du chargement
 notification.playset.add: Ajout du playset...
 notification.playset.add.success: Le playset "{name}" a été ajouté avec succès !
 notification.playset.add.error: Oups... Une erreur s'est produite lors de l'ajout du playset. Veuillez réessayer.
+notification.playset.edit.success: Le playset "{name}" a été modifié avec succès !
+notification.playset.edit.error: Oups... Une erreur s'est produite lors de la modification du playset. Veuillez réessayer.
+notification.playset.delete.success: Le playset "{name}" a été supprimé avec succès !
+notification.playset.delete.error: Oups... Une erreur s'est produite lors de la suppression du playset. Veuillez réessayer.
 
 # Displays refreshed
 notification.displays_refreshed.success: Liste des moniteurs actualisée.
@@ -160,3 +166,10 @@ dialog.confirm_hoi4_path.description_auto: >
 
 # Parameter argument
 dialog.parameter_argument.invalid_argument: 'Argument invalide : {argument}'
+
+# Edit playset
+dialog.playset.edit: Modifier un playset
+
+# Delete playset
+dialog.playset.delete: Supprimer un playset
+dialog.playset.delete.confim: Voulez-vous vraiment supprimer le playset "{name}" ?

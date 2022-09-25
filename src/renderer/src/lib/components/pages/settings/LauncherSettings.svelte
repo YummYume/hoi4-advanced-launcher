@@ -11,7 +11,7 @@
 
     import SectionTitleUnderline from '../../../components/SectionTitleUnderline.svelte';
     import { supportedLanguages } from '../../../data/languages';
-    import ConfirmHoi4Path from '../../../components/ConfirmHoi4Path.svelte';
+    import ConfirmHoi4Path from '../../dialogs/ConfirmHoi4PathDialog.svelte';
     import { loading } from '../../../stores/loading';
 
     let steamPath = api.getHoi4Path();

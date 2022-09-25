@@ -8,6 +8,7 @@ common.default: Default
 common.add: Add
 common.update: Update
 common.delete: Delete
+common.field_required: This field is required.
 
 ### Menu
 menu.home: Launcher
@@ -85,6 +86,7 @@ playset.title: Title
 playset.description: Description
 playset.default.title: All mods
 playset.default.description: Default playset with all your mods
+playset.add: Add a playset
 
 ### Settings
 # Launcher settings
@@ -130,6 +132,10 @@ notification.playset.error: Oops... Something went wrong while loading the plays
 notification.playset.add: Adding playset...
 notification.playset.add.success: Playset "{name}" added successfully!
 notification.playset.add.error: Oops... Something went wrong while adding the playset. Please try again.
+notification.playset.edit.success: Playset "{name}" edited successfully!
+notification.playset.edit.error: Oops... Something went wrong while editing the playset. Please try again.
+notification.playset.delete.success: Playset "{name}" deleted successfully!
+notification.playset.delete.error: Oops... Something went wrong while deleting the playset. Please try again.
 
 # Displays refreshed
 notification.displays_refreshed.success: Display list refreshed.
@@ -156,3 +162,10 @@ dialog.confirm_hoi4_path.description_auto: >
 
 # Parameter argument
 dialog.parameter_argument.invalid_argument: 'Invalid argument : {argument}'
+
+# Edit playset
+dialog.playset.edit: Edit a playset
+
+# Delete playset
+dialog.playset.delete: Delete a playset
+dialog.playset.delete.confim: Are you sure you want to delete "{name}" playset?

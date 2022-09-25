@@ -7,13 +7,13 @@
     import { DialogContent, getClose, getOptions } from 'svelte-dialogs';
     import { _ } from 'svelte-i18n';
 
-    import type { Parameter } from '../data/parameters';
-
-    const close = getClose();
-    const { titleId } = getOptions();
+    import type { Parameter } from '../../data/parameters';
 
     export let strictMode: boolean;
     export let parameter: Parameter;
+
+    const close = getClose();
+    const { titleId } = getOptions();
 
     let argument = '';
 
