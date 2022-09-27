@@ -17,6 +17,7 @@
   "devDependencies": {
     "@smui-extra/accordion": "^6.0.0-beta.16",
     "@smui-extra/autocomplete": "^6.0.0-beta.16",
+    "@smui-extra/badge": "^6.1.0",
     "@smui/button": "^6.0.0-beta.16",
     "@smui/checkbox": "^6.1.0",
     "@smui/chips": "^6.0.0-beta.16",
@@ -58,6 +59,7 @@
   },
   "dependencies": {
     "@eslint/create-config": "0.3.1",
+    "chokidar": "^3.5.3",
     "electron-log": "^4.4.8",
     "electron-store": "^8.0.2",
     "electron-unhandled": "^4.0.1",

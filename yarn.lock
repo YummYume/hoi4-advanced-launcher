@@ -825,6 +825,19 @@
     "@smui/textfield" "^6.0.0-beta.16"
     svelte2tsx "^0.5.5"
 
+"@smui-extra/badge@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@smui-extra/badge/-/badge-6.1.0.tgz#7facfee1766c97916f2e1ea250b101b9e0b693dc"
+  integrity sha512-o4MPsksTWaS4WJJExDFTBUq+Zc9CgunIS+I2lARJhDFhW/mIKQ9zwegYS+tS2zIg3D2EsZ79WXGyZxHT0ysHBA==
+  dependencies:
+    "@material/feature-targeting" "^13.0.0"
+    "@material/rtl" "^13.0.0"
+    "@material/shape" "^13.0.0"
+    "@material/theme" "^13.0.0"
+    "@material/typography" "^13.0.0"
+    "@smui/common" "^6.1.0"
+    svelte2tsx "^0.5.12"
+
 "@smui/button@^6.0.0-beta.16":
   version "6.0.0-beta.16"
   resolved "https://registry.yarnpkg.com/@smui/button/-/button-6.0.0-beta.16.tgz#5681c0be6a15a9e1773a9e760675340101a47e7d"
@@ -1912,7 +1925,7 @@ chalk@^4.0.0, chalk@^4.0.2, chalk@^4.1.0, chalk@^4.1.1, chalk@^4.1.2:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-chokidar@^3.4.1:
+chokidar@^3.4.1, chokidar@^3.5.3:
   version "3.5.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.3.tgz#1cf37c8707b932bd1af1ae22c0432e2acd1903bd"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
