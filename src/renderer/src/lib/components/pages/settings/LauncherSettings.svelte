@@ -13,14 +13,14 @@
     import { supportedLanguages } from '../../../data/languages';
     import ConfirmHoi4Path from '../../dialogs/ConfirmHoi4PathDialog.svelte';
     import { loading } from '../../../stores/loading';
+    import { hoi4Path } from '../../../stores/hoi4Path';
 
-    let steamPath = api.getHoi4Path();
     let currentLocale = supportedLanguages.find((l) => l.key === $locale);
 
     $: if (currentLocale) {
         locale.set(currentLocale.key);
     }
-    $: gamePath = steamPath ?? '';
+    $: gamePath = $hoi4Path ?? '';
 
     async function handleFolderPathSelect(auto = false) {
         const path = auto ? api.findHoi4DirPath() : await api.folderPathInput();
@@ -30,25 +30,34 @@
         }
 
         if (api.isValidHoi4Folder(path)) {
-            const confirm = await dialogs.modal(ConfirmHoi4Path, { path, auto });
+            const confirm = await dialogs.modal(ConfirmHoi4Path, {
+                path,
+                auto,
+            });
 
             if (confirm) {
                 try {
                     $loading = true;
 
                     await api.setHoi4DirPath(path);
-                    steamPath = api.getHoi4Path();
+                    hoi4Path.refresh();
 
                     $loading = false;
 
                     api.logs().info(`HOI4 dir path changed to : ${path}`);
 
-                    toast.push($_('notification.select_hoi4_folder_path.success'), { classes: ['success'] });
+                    toast.push(
+                        $_('notification.select_hoi4_folder_path.success'),
+                        { classes: ['success'] }
+                    );
                 } catch (e) {
                     $loading = false;
                     api.logs().error('Error while changing HOI4 dir path.');
 
-                    toast.push($_('notification.select_hoi4_folder_path.error'), { classes: ['error'] });
+                    toast.push(
+                        $_('notification.select_hoi4_folder_path.error'),
+                        { classes: ['error'] }
+                    );
                 }
             }
         } else {
@@ -82,11 +91,18 @@
             disabled
         />
         <Wrapper>
-            <IconButton class="material-icons" on:click={() => handleFolderPathSelect(true)} touch size="normal">
+            <IconButton
+                class="material-icons"
+                on:click={() => handleFolderPathSelect(true)}
+                touch
+                size="normal"
+            >
                 auto_awesome
             </IconButton>
             <Tooltip showDelay={1000} hideDelay={100}>
-                <TooltipContent>{$_('settings.game_folder.auto_find')}</TooltipContent>
+                <TooltipContent>
+                    {$_('settings.game_folder.auto_find')}
+                </TooltipContent>
             </Tooltip>
         </Wrapper>
     </div>
@@ -104,5 +120,5 @@
 </div>
 
 <style>
-    @import 'settings.css';
+    @import "settings.css";
 </style>

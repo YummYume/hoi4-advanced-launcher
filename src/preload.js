@@ -56,6 +56,8 @@ function isValidHoi4Folder(pathName) {
 
     if (!fs.existsSync(pathName)) {
         log.error('Invalid HOI4 folder path.');
+
+        return false;
     }
 
     const gameFolders = [

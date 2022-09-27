@@ -5,12 +5,17 @@
     import GameSettings from '../components/pages/settings/GameSettings.svelte';
     import LauncherOptions from '../components/pages/settings/LauncherOptions.svelte';
     import LauncherSettings from '../components/pages/settings/LauncherSettings.svelte';
+    import { hoi4Path } from '../stores/hoi4Path';
+
+    $: canDisplayGameSettings = api.isValidHoi4Folder($hoi4Path);
 </script>
 
 <section class="container" in:fade>
     {#key $locale}
         <LauncherSettings />
-        <GameSettings />
+        {#if canDisplayGameSettings}
+            <GameSettings />
+        {/if}
         <LauncherOptions />
     {/key}
 </section>

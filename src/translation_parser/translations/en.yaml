@@ -125,7 +125,7 @@ settings.options.open_logs: Open logs folder
 # Launch error
 notification.launch_error: Something went wrong while launching the game.
 notification.invalid_hoi4_executable_path: >
-    Your HOI4 executable path seems wrong. This is most likely due to an invalid game folder path in your settings.
+    Your HOI4 executable path is invalid. This is most likely due to an invalid game folder path in your settings.
 
 # Playsets
 notification.playset.error: Oops... Something went wrong while loading the playsets.

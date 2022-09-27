@@ -129,7 +129,7 @@ settings.options.open_logs: Ouvrir le dossier des logs
 # Launch error
 notification.launch_error: Une erreur est survenue lors du lancement du jeu.
 notification.invalid_hoi4_executable_path: >
-    Votre chemin d'exécutable pour HOI4 semble erroné. Cela est probablement dû à un chemin du dossier de jeu invalide dans vos paramètres.
+    Votre chemin d'exécutable pour HOI4 est erroné. Cela est probablement dû à un chemin du dossier de jeu invalide dans vos paramètres.
 
 # Playsets
 notification.playset.error: Oups... Une erreur s'est produite lors du chargement des playsets.
