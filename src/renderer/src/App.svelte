@@ -6,23 +6,28 @@
     import { Circle2 } from 'svelte-loading-spinners';
     import { fade } from 'svelte/transition';
     import { SvelteToast } from '@zerodevx/svelte-toast';
+    import Badge from '@smui-extra/badge';
 
-    import { tabs } from './lib/data/tabs';
+    import { tabs } from './lib/stores/tabs';
     import { currentTab } from './lib/stores/currentTab';
     import { loading } from './lib/stores/loading';
     import { displayScreens } from './lib/stores/displayScreens';
     import { gameSettings } from './lib/stores/gameSettings';
     import { launchParameters, launchParametersStrictMode } from './lib/stores/launchParameters';
+    import { hoi4Path } from './lib/stores/hoi4Path';
 
     onMount(() => {
         displayScreens.load();
         gameSettings.load();
+        hoi4Path.refresh();
     });
 
     $: handleLocaleChange($locale);
     $: handleLaunchParametersChange($launchParameters);
     $: handleLaunchParametersStrictModeChange($launchParametersStrictMode);
     $: appLoading = $isLoading || $loading;
+    $: handleSettingsNotification(api.isValidHoi4Folder($hoi4Path ?? api.getHoi4Path()));
+    $: $currentTab, tabs.setNotification($currentTab.key, false);
 
     async function handleLocaleChange(newLocale?: string) {
         if (newLocale) {
@@ -51,6 +56,12 @@
             api.logs().error(e);
         }
     }
+
+    function handleSettingsNotification(isValidHoi4Folder: boolean) {
+        if (!isValidHoi4Folder) {
+            tabs.setNotification('settings', true);
+        }
+    }
 </script>
 
 {#if appLoading}
@@ -59,9 +70,20 @@
     </div>
 {/if}
 <header>
-    <TabBar {tabs} disabled={appLoading} let:tab bind:active={$currentTab}>
+    <TabBar tabs={$tabs} disabled={appLoading} let:tab bind:active={$currentTab}>
         <Tab {tab} disabled={appLoading}>
-            <Label>{$_(`menu.${tab.key}`)}</Label>
+            <Label>
+                <div class="tab-label">
+                    {$_(`menu.${tab.key}`)}
+                    {#if tab.hasNotification}
+                        <Badge
+                            position="outset"
+                            aria-label={$_(`badge.tabs.${tab.key}`)}
+                            style="min-height: 10px; min-width: 10px; padding: 0;"
+                        />
+                    {/if}
+                </div>
+            </Label>
         </Tab>
     </TabBar>
 </header>
@@ -86,6 +108,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+
+    .tab-label {
+        position: relative;
     }
 
     :global(.info) {

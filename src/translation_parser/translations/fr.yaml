@@ -125,6 +125,16 @@ settings.renderer.description: Le moteur de rendu du jeu. N'a aucun effet sur Li
 settings.options: Options
 settings.options.open_logs: Ouvrir le dossier des logs
 
+### Badges
+# Tabs
+badge.tabs.home: L'onglet Launcher requiert votre attention
+badge.tabs.mods: L'onglet Mods requiert votre attention
+badge.tabs.conflicts: L'onglet Conflits requiert votre attention
+badge.tabs.settings: L'onglet Paramètres requiert votre attention
+
+# HOI4 Path
+badge.hoi4_path.invalid: Votre chemin d'accès à l'exécutable HOI4 n'est pas valide.
+
 ### Notifications
 # Launch error
 notification.launch_error: Une erreur est survenue lors du lancement du jeu.

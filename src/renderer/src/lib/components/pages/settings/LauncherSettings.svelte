@@ -8,6 +8,7 @@
     import IconButton from '@smui/icon-button';
     import Tooltip, { Wrapper, Content as TooltipContent } from '@smui/tooltip';
     import { toast } from '@zerodevx/svelte-toast';
+    import Badge from '@smui-extra/badge';
 
     import SectionTitleUnderline from '../../../components/SectionTitleUnderline.svelte';
     import { supportedLanguages } from '../../../data/languages';
@@ -21,6 +22,7 @@
         locale.set(currentLocale.key);
     }
     $: gamePath = $hoi4Path ?? '';
+    $: isValidHoi4Path = api.isValidHoi4Folder($hoi4Path);
 
     async function handleFolderPathSelect(auto = false) {
         const path = auto ? api.findHoi4DirPath() : await api.folderPathInput();
@@ -81,6 +83,9 @@
     <div class="form-field folder-select-container">
         <Button variant="raised" on:click={() => handleFolderPathSelect()}>
             <Label>{$_('common.select')}</Label>
+            {#if !isValidHoi4Path}
+                <Badge align="top-start" aria-label={$_('badge.hoi4_path.invalid')}>!</Badge>
+            {/if}
         </Button>
         <Textfield
             label={$_('settings.game_folder')}

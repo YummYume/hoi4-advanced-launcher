@@ -3,7 +3,7 @@
     import Select, { Option } from '@smui/select';
     import FormField from '@smui/form-field';
     import Switch from '@smui/switch';
-    import { fly } from 'svelte/transition';
+    import { fade, fly } from 'svelte/transition';
     import IconButton from '@smui/icon-button';
     import Tooltip, { Wrapper, Content as TooltipContent } from '@smui/tooltip';
     import { toast } from '@zerodevx/svelte-toast';
@@ -134,7 +134,7 @@
     }
 </script>
 
-<div class="section">
+<div class="section" transition:fade|local>
     <div class="section-title">
         <span class="title">{$_('settings.game_settings')}</span>
         <SectionTitleUnderline />

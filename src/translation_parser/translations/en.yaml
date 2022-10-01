@@ -121,6 +121,16 @@ settings.renderer.description: The renderer for the game. Does not have any effe
 settings.options: Options
 settings.options.open_logs: Open logs folder
 
+### Badges
+# Tabs
+badge.tabs.home: Launcher tab requires attention
+badge.tabs.mods: Mods tab requires attention
+badge.tabs.conflicts: Conflicts tab requires attention
+badge.tabs.settings: Parameters tab requires attention
+
+# HOI4 Path
+badge.hoi4_path.invalid: Your HOI4 executable path is invalid.
+
 ### Notifications
 # Launch error
 notification.launch_error: Something went wrong while launching the game.

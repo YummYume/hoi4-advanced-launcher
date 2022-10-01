@@ -6,13 +6,14 @@ import Conflicts from '../pages/Conflicts.svelte';
 import Mods from '../pages/Mods.svelte';
 
 export const tabs: Tab[] = [
-    { key: 'home', component: Home },
-    { key: 'mods', component: Mods },
-    { key: 'conflicts', component: Conflicts },
-    { key: 'settings', component: Settings }
+    { key: 'home', component: Home, hasNotification: false },
+    { key: 'mods', component: Mods, hasNotification: false },
+    { key: 'conflicts', component: Conflicts, hasNotification: false },
+    { key: 'settings', component: Settings, hasNotification: false }
 ];
 
 export interface Tab {
-    key: string;
+    key: 'home'|'mods'|'conflicts'|'settings';
     component: typeof SvelteComponent;
+    hasNotification: boolean;
 }

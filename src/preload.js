@@ -55,7 +55,7 @@ function isValidHoi4Folder(pathName) {
     pathName = pathName ?? '';
 
     if (!fs.existsSync(pathName)) {
-        log.error('Invalid HOI4 folder path.');
+        log.error(`Invalid HOI4 folder path : "${pathName}" (does not exist).`);
 
         return false;
     }
@@ -141,6 +141,7 @@ function parsePdxSettings(settings) {
 
 async function writePdxSettings(settings) {
     try {
+        const pdxSettingsPath = path.join(paths.gameDataPath, 'pdx_settings.txt');
         let template = await fsPromises.readFile(
             path.join(__dirname, 'templates', 'pdx_settings_template.txt'),
             'utf-8'
@@ -175,7 +176,11 @@ async function writePdxSettings(settings) {
         template = template.replace(/{LANGUAGE_VALUE}/gm, settings.System.language.value ?? 'l_english');
         template = template.replace(/{LANGUAGE_VERSION}/gm, settings.System.language.version ?? '0');
 
-        await fsPromises.writeFile(path.join(paths.gameDataPath, 'pdx_settings.txt'), template);
+        if (!fs.existsSync(path.dirname(pdxSettingsPath))) {
+            fs.mkdirSync(path.dirname(pdxSettingsPath), { recursive: true });
+        }
+
+        await fsPromises.writeFile(pdxSettingsPath, template);
 
         gameSettings = parsePdxSettings(template);
     } catch (e) {

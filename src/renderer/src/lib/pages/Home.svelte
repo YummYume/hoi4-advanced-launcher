@@ -5,12 +5,16 @@
     import { toast } from '@zerodevx/svelte-toast';
     import { fade } from 'svelte/transition';
     import { _ } from 'svelte-i18n';
+    import Badge from '@smui-extra/badge';
 
     import { launchParameters, launchParametersStrictMode } from '../stores/launchParameters';
     import { launchParametersOpened } from '../stores/launchParametersOpened';
+    import { hoi4Path } from '../stores/hoi4Path';
     import Parameters from '../components/pages/home/Parameters.svelte';
 
     let parameterErrorMessage = null;
+
+    $: displayWarning = !api.isValidHoi4Folder($hoi4Path);
 
     function launchHoi4(): void {
         if (!api.isValidHoi4ExecutablePath(api.getHoi4ExecutablePath())) {
@@ -37,6 +41,9 @@
             disabled={Boolean($launchParametersStrictMode && parameterErrorMessage)}
         >
             <ButtonLabel>{$_('home.launch_hoi4')}</ButtonLabel>
+            {#if displayWarning}
+                <Badge aria-label={$_('badge.hoi4_path.invalid')}>!</Badge>
+            {/if}
         </Button>
     </div>
     <div class="bottom-row">
